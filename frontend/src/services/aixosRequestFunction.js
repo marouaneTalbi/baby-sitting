@@ -60,33 +60,36 @@ const sendRequest = async (endpoint, method = 'GET', data = {}, requireAuth = tr
 }
 
  
-axiosInstance.interceptors.request.use(async config => {
+// axiosInstance.interceptors.request.use(async config => {
 
-  const token = localStorage.getItem('token');
-  const isValidToken = !isTokenExpired();
+//   const token = localStorage.getItem('token');
+//   const isValidToken = !isTokenExpired();
 
-  if(!token && !urlsWithoutAuth.includes(config.url)) {
-    window.location.replace('/login');
-  }
+//   console.log(token)
 
-  if (config.url.includes('/api/login')
-      || (config.url.includes('/api/users') && config.method === 'post')
-  ) {
 
-    return config;
-  }
+//   // if(!token && !urlsWithoutAuth.includes(config.url)) {
+//   //   window.location.replace('/signin');
+//   // }
 
-  if (!isValidToken) {
-    const newToken = await refreshToken();
-    config.headers['Authorization'] = `Bearer ${newToken}`;
-  } else {
-    config.headers['Authorization'] = `Bearer ${token}`;
-  }
+//   if (config.url.includes('/api/login')
+//       || (config.url.includes('/api/users') && config.method === 'post')
+//   ) {
 
-  return config;
-}, error => {
-  return Promise.reject(error);
-});
+//     return config;
+//   }
+
+//   if (!isValidToken) {
+//     const newToken = await refreshToken();
+//     config.headers['Authorization'] = `Bearer ${newToken}`;
+//   } else {
+//     config.headers['Authorization'] = `Bearer ${token}`;
+//   }
+
+//   return config;
+// }, error => {
+//   return Promise.reject(error);
+// });
 
 export  function isTokenExpired() {
   if(!localStorage.getItem('token')) {

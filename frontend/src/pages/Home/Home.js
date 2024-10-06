@@ -22,13 +22,13 @@ const Home = () => {
         {/* Call-to-Action Buttons */}
         <div className="space-x-4">
           <Link
-            to="/signup"
+            to="/signup?role=worker"
             className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
           >
             Sign Up as a Babysitter/Housekeeper
           </Link>
           <Link
-            to="/signup"
+            to="/signup?role=parent"
             className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition"
           >
             Sign Up as a Parent

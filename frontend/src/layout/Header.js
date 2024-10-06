@@ -1,20 +1,69 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import useCurrentUser from '../hooks/useAuth';
+import Dropdown from '../components/DropDown';
+
 
 const Header = () => {
+
+  const user = useCurrentUser();
+  const [role, setRole] = useState()
+  const location = useLocation();
+
+  useEffect(() => {
+    if(user) {
+      setRole(user.roles.join())
+    }
+
+    if(location.pathname === "/signin") {
+      setRole()
+    }
+
+  }, [user,location])
+
+
   return (
     <header className="bg-blue-600 text-white shadow-md">
+
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
         <div className="text-xl font-bold">
           <Link to="/">BaBy-Sit</Link>
         </div>
 
-        {/* Navigation */}
         <nav className="flex space-x-4">
-          <Link to="/" className="hover:text-gray-200">
-            Home
-          </Link>
+          {
+            role && role === "ROLE_ADMIN" && (
+              <>          
+                <Link to="/" className="hover:text-gray-200">
+                  Users
+                </Link>
+              </>
+            ) 
+          }
+          {
+           role && role === "ROLE_PARENT" && (
+              <>          
+                <Link to="/" className="hover:text-gray-200">
+                  Baby Sitters
+                </Link>
+              </>
+            ) 
+          }
+          {
+          role &&  role === "ROLE_WORKER" && (
+              <>          
+                <Link to="/" className="hover:text-gray-200">
+                  Find offers
+                </Link>
+              </>
+            ) 
+          }
+          {
+            !role &&      
+            <Link to="/" className="hover:text-gray-200">
+                Home
+            </Link>
+          }
           <Link to="/about" className="hover:text-gray-200">
             About
           </Link>
@@ -23,7 +72,6 @@ const Header = () => {
           </Link>
         </nav>
 
-        {/* Auth Buttons */}
         <div className="space-x-4">
           <Link
             to="/signin"
@@ -38,7 +86,12 @@ const Header = () => {
             Sign Up
           </Link>
         </div>
+
+        <div className="space-x-4">
+          {  role && <Dropdown  placeholder="Profile" /> }
+        </div>
       </div>
+
     </header>
   );
 };

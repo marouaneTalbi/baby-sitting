@@ -6,6 +6,7 @@ import Home from './pages/Home/Home';
 import Footer from './layout/Footer';
 import Signup from './pages/Connexion/SignUp';
 import SignIn from './pages/Connexion/SignIn';
+import Dashboard from './pages/Home/Dashboard';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
         <div className="flex-grow">
         </div>

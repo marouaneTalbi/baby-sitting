@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bgImage from '../../assets/images/img.webp';
-import { ToastContainer, toast } from 'react-toastify';
-import { Button, Card, Label, TextInput } from 'flowbite-react';
+import {  toast } from 'react-toastify';
+import { Button} from 'flowbite-react';
 import sendRequest from '../../services/aixosRequestFunction';
-import axios from 'axios';
 
 const SignIn = () => {
 
@@ -24,12 +23,7 @@ const SignIn = () => {
             },
              false
         ).then((response) => {
-          console.log(response)
             if(response) {
-
-              console.log(')))',response)
-                // setToken(response.token)
-                // setUser(response);
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('refresh_token', response.refresh_token);
                 localStorage.setItem('user', JSON.stringify(response));
@@ -45,17 +39,17 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
       e.preventDefault();
-      // setIsLoading(true);
+      setIsLoading(true);
       try {
           const success = await login(email, password);
-          // if (success) {
-          //     toast.success('Vous êtes Connecté !');
-          //     // setIsLoading(false);
-          //     // navigate("/");
-          // }
+          if (success) {
+              toast.success('Vous êtes Connecté !');
+              setIsLoading(false);
+              navigate("/dashboard");
+          }
       } catch (error) {
-          // setIsLoading(false);
-          // toast.error("Username ou mot de passe incorrect");
+          setIsLoading(false);
+          toast.error("Username ou mot de passe incorrect");
       }
   };
 
@@ -83,12 +77,7 @@ const SignIn = () => {
               />
             </div>
             <div>
-              {/* <button
-                type="submit"
-                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              >
-                Sign In
-              </button> */}
+
               <Button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" type="submit" color="blue" disabled={isLoading}>{isLoading ? 'Connexion...' : 'Connexion'}</Button>
             </div>
             <div className="text-center">
