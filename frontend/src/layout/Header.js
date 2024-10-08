@@ -5,16 +5,14 @@ import Dropdown from '../components/DropDown';
 
 
 const Header = () => {
-
   const user = useCurrentUser();
   const [role, setRole] = useState()
   const location = useLocation();
 
   useEffect(() => {
     if(user) {
-      setRole(user.roles.join())
+      setRole(user.role.join())
     }
-
     if(location.pathname === "/signin") {
       setRole()
     }
@@ -43,7 +41,7 @@ const Header = () => {
           {
            role && role === "ROLE_PARENT" && (
               <>          
-                <Link to="/" className="hover:text-gray-200">
+                <Link to="/workers" className="hover:text-gray-200">
                   Baby Sitters
                 </Link>
               </>
@@ -52,7 +50,7 @@ const Header = () => {
           {
           role &&  role === "ROLE_WORKER" && (
               <>          
-                <Link to="/" className="hover:text-gray-200">
+                <Link to="/offres" className="hover:text-gray-200">
                   Find offers
                 </Link>
               </>
@@ -72,21 +70,23 @@ const Header = () => {
           </Link>
         </nav>
 
-        <div className="space-x-4">
-          <Link
-            to="/signin"
-            className="px-4 py-2 bg-white text-blue-600 font-semibold rounded-md hover:bg-gray-100"
-          >
-            Sign In
-          </Link>
-          <Link
-            to="/signup"
-            className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-700"
-          >
-            Sign Up
-          </Link>
-        </div>
-
+        {
+          !role &&
+          <div className="space-x-4">
+            <Link
+              to="/signin"
+              className="px-4 py-2 bg-white text-blue-600 font-semibold rounded-md hover:bg-gray-100"
+            >
+              Sign In
+            </Link>
+            <Link
+              to="/signup"
+              className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-700"
+            >
+              Sign Up
+            </Link>
+          </div>
+        }
         <div className="space-x-4">
           {  role && <Dropdown  placeholder="Profile" /> }
         </div>

@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use App\Controller\UserSearchController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\DataPersister\UserDataPersister;
 
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Controller\GetCurrentUserController;
 
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -18,26 +18,52 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
+use App\Controller\UserWithProfileController;
+use App\Controller\UserAvailabilities;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     operations: [
-        new Get(), 
-        new GetCollection(), 
-        // new Post(),
-        new Post(
-            processor: UserDataPersister::class
+        new Get(
+            uriTemplate: '/me',
+            controller: GetCurrentUserController::class,
+            read: false,
+            openapiContext: [
+                'summary' => 'Récupère l’utilisateur actuellement connecté.',
+            ],
+            normalizationContext: ['groups' => ['user:read']],
         ),
-        new Put(), 
-        new Delete(), 
+        new GetCollection(
+            uriTemplate: '/users_with_profiles',
+            controller: UserWithProfileController::class,
+            normalizationContext: ['groups' => ['user:read']],
+            openapiContext: [
+                'summary' => 'Récupère tous les utilisateurs avec leurs profils associés.',
+            ],
+        ),
+        new Post(
+            processor: UserDataPersister::class,
+            denormalizationContext: ['groups' => ['user:write']]
+        ),
+        new GetCollection(),
+        new Put(),
+        new Get(),
+        new Get(
+            uriTemplate: '/users_availability/{id}',
+            controller: UserAvailabilities::class,
+        ),
+        new Delete(),
     ]
 )]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -53,6 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $role = null;
 
     #[ORM\Column(length: 255)]
@@ -62,7 +89,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[Groups(['user:read'])]
     private ?Profile $profile = null;
 
     /**
@@ -70,6 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: UserService::class)]
     #[Subresource]
+    #[Groups('user')]
     private Collection $userServices;
 
     /**
@@ -87,7 +116,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Availability>
      */
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Availability::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Availability::class, fetch: 'EAGER')]
+    #[Groups(['user:read'])]
     private Collection $availabilities;
 
     

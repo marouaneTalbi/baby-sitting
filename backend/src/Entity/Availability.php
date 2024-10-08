@@ -6,26 +6,35 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AvailabilityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AvailabilityRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['availability:read']],
+    denormalizationContext: ['groups' => ['availability:write']]
+)]
 class Availability
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read', 'availability:read'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'availabilities')]
-    private ?User $user_id = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'availabilities')]
+    #[Groups(['user:read', 'availability:read'])]
+    private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'availability:read'])]
     private ?string $day_of_week = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['user:read', 'availability:read'])]
     private ?\DateTimeInterface $start_time = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['availability:read'])]
     private ?\DateTimeInterface $end_time = null;
 
     public function getId(): ?int
@@ -33,14 +42,14 @@ class Availability
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setUser(?User $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }

@@ -5,9 +5,15 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+
+
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
 #[ApiResource]
+
+        
 class Profile
 {
     #[ORM\Id]
@@ -16,24 +22,30 @@ class Profile
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'profile', cascade: ['persist', 'remove'])]
-    private ?User $user_id = null;
+    #[Groups(['profile:write', 'profile:read'])]
+    private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['profile:write'])]
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['profile:write'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['profile:write'])]
     private ?string $rate_per_hour = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['profile:write'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['profile:write'])]
     private ?string $availability = null;
 
     public function __construct()
@@ -46,14 +58,14 @@ class Profile
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setUser(?User $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }

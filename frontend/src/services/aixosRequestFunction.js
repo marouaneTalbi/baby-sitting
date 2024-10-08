@@ -9,22 +9,10 @@ const axiosInstance = axios.create({
   baseURL: API_BASE_URL
 }); 
 
-const urlsWithoutAuth = ['/api/token/refresh', '/api/users', '/api/mdpresetemail', '/api/resetmdp', '/auth'];
-
-export function getUserRole() {
-  if(!localStorage.getItem('token')) {
-    return null;
-  } else {
-    const token = localStorage.getItem('token');
-    const decodedToken = jwtDecode(token);
-    return decodedToken;
-  }
-}
 
 const sendRequest = async (endpoint, method = 'GET', data = {}, requireAuth = true, params = {}) => {
-  const isValidToken = !isTokenExpired();
-
-  if (requireAuth && isValidToken) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (requireAuth ) {
     const token = localStorage.getItem('token');
     if (token) {
       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -37,6 +25,7 @@ const sendRequest = async (endpoint, method = 'GET', data = {}, requireAuth = tr
         method,
         data,
         params,
+        headers
       });
       return response.data;
     } catch (error) {
@@ -50,6 +39,7 @@ const sendRequest = async (endpoint, method = 'GET', data = {}, requireAuth = tr
         method,
         data,
         params,
+        headers
       });
       return response.data;
     } catch (error) {
@@ -58,66 +48,5 @@ const sendRequest = async (endpoint, method = 'GET', data = {}, requireAuth = tr
     }
   }
 }
-
- 
-// axiosInstance.interceptors.request.use(async config => {
-
-//   const token = localStorage.getItem('token');
-//   const isValidToken = !isTokenExpired();
-
-//   console.log(token)
-
-
-//   // if(!token && !urlsWithoutAuth.includes(config.url)) {
-//   //   window.location.replace('/signin');
-//   // }
-
-//   if (config.url.includes('/api/login')
-//       || (config.url.includes('/api/users') && config.method === 'post')
-//   ) {
-
-//     return config;
-//   }
-
-//   if (!isValidToken) {
-//     const newToken = await refreshToken();
-//     config.headers['Authorization'] = `Bearer ${newToken}`;
-//   } else {
-//     config.headers['Authorization'] = `Bearer ${token}`;
-//   }
-
-//   return config;
-// }, error => {
-//   return Promise.reject(error);
-// });
-
-export  function isTokenExpired() {
-  if(!localStorage.getItem('token')) {
-    return null;
-  } else {
-    const token = localStorage.getItem('token');
-
-    const decodedToken = jwtDecode(token);
-    const expirationDate = new Date(decodedToken.exp * 1000);
-    const now = new Date();
-    return now > expirationDate;
-  }
-}
-
-async function refreshToken() {
-  try {
-    const refresh_token = localStorage.getItem('refresh_token');
-    const response = await sendRequest('/api/token/refresh ','post', { refresh_token }, false);
-    localStorage.setItem('token', response.token);
-    if(response) {
-      window.location.reload();
-      return response.token;
-    }
-  } catch (error) {
-    console.log(error)
-  }
-}
- 
-
 
 export default sendRequest;

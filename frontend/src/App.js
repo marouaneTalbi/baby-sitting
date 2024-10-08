@@ -7,6 +7,10 @@ import Footer from './layout/Footer';
 import Signup from './pages/Connexion/SignUp';
 import SignIn from './pages/Connexion/SignIn';
 import Dashboard from './pages/Home/Dashboard';
+import Worker from './pages/Worker/worker';
+import Profile from './pages/Profile/Profile';
+import Offres from './pages/Offers/Offers';
+import ConatctProfile from './pages/Profile/ContactProfile';
 
 function App() {
   return (
@@ -19,6 +23,11 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/home" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/workers" element={<Worker />} />
+          <Route path="/offres" element={<Offres />} />
+          <Route path="/contact" element={<ConatctProfile />} />
+
         </Routes>
         <div className="flex-grow">
         </div>

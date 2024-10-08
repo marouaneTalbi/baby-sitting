@@ -13,7 +13,9 @@ const Dropdown = ({ placeholder }) => {
     setSelected(option);
     setIsOpen(false);
 
-    if(option === ' Profile') {
+    console.log(option)
+
+    if(option === 'Profile') {
         navigate("/profile");
     } else if(option =='Deconnexion') {
         navigate("/signin");
