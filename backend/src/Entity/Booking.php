@@ -14,30 +14,39 @@ class Booking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['booking:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
+    #[Groups(['booking:read', 'booking:write'])]
     private ?User $parent_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
+    #[Groups(['booking:read', 'booking:write'])]
     private ?User $service_provider_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
+    #[Groups(['booking:read', 'booking:write'])]
     private ?Service $service_id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['booking:read', 'booking:write'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['booking:read', 'booking:write'])]
     private ?\DateTimeInterface $start_time = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['booking:read', 'booking:write'])]
     private ?\DateTimeInterface $end_time = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['booking:read', 'booking:write'])]
     private ?string $status = null;
 
     #[ORM\Column]
+    #[Groups(['booking:read', 'booking:write'])]
     private ?\DateTimeImmutable $create_at = null;
 
     public function getId(): ?int

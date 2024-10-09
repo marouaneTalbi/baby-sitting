@@ -7,14 +7,11 @@ const Profile = () => {
   const user = useCurrentUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [role, setRole] = useState();
-
   const [phone, setPhone] = useState();
   const [address, setAddress] = useState();
   const [rate, setRate] = useState();
   const [description, setDescription] = useState();
   const [profile, setProfile] = useState();
-
-
 
   useEffect(() => {
     if(user) {

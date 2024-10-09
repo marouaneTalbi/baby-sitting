@@ -19,12 +19,16 @@ class UserRepository extends ServiceEntityRepository
     public function findAllUsersWithProfiles(): array
     {
         return $this->createQueryBuilder('u')
-            ->leftJoin('u.profile', 'p')
-            ->addSelect('p')
-            ->where('u.role = :role')
+            ->leftJoin('u.profile', 'p')         // Jointure avec la table des profils
+            ->leftJoin('u.userServices', 'us')   // Jointure avec la table intermédiaire UserService
+            ->leftJoin('us.service', 's')        // Jointure avec la table des services via UserService
+            ->addSelect('p')                     // Inclure le profil dans la sélection
+            ->addSelect('us')                    // Inclure la relation UserService dans la sélection
+            ->addSelect('s')                     // Inclure les services dans la sélection
+            ->where('u.role = :role')            // Filtrer par rôle (ROLE_WORKER)
             ->setParameter('role', 'ROLE_WORKER')
             ->getQuery()
-            ->getArrayResult(); 
+            ->getArrayResult();  
     }
 
     public function findUserAvailabilities(int $userId): array

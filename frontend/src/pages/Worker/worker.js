@@ -13,7 +13,6 @@ const Worker = () => {
             const endpoint = `/api/users_with_profiles`; 
             const method = 'get';
             const response = await sendRequest(endpoint, method, {}, true);
-            console.log(response)
             return response;
         } catch (error) {
             console.error('Failed to get Users:', error); 
