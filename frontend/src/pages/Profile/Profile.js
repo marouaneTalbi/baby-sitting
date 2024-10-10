@@ -76,12 +76,6 @@ const updateData = async (e) => {
             <span className="text-gray-900" >{user.email}</span>
           </div>
 
-          {/* <div className="flex items-center">
-            <span className="w-32 font-bold text-gray-700">Role:</span>
-            <span className="text-gray-900">{user.role}</span>
-          </div> */}
-
-          {/* Profile Details */}
           {user.profile && (
             <>
               <div className="flex items-center">

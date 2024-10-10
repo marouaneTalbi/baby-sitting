@@ -1,8 +1,5 @@
 
 import axios from 'axios';
-import { jwtDecode } from "jwt-decode";
-import { useNavigate, Params } from 'react-router';
-// const API_BASE_URL = process.env.REACT_APP_SERVER
 const API_BASE_URL = "http://localhost:8888"
 
 const axiosInstance = axios.create({

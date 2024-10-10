@@ -9,10 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AvailabilityRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['availability:read']],
-    denormalizationContext: ['groups' => ['availability:write']]
-)]
+#[ApiResource]
 class Availability
 {
     #[ORM\Id]
@@ -34,7 +31,7 @@ class Availability
     private ?\DateTimeInterface $start_time = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['availability:read'])]
+    #[Groups(['user:read', 'availability:read'])]
     private ?\DateTimeInterface $end_time = null;
 
     public function getId(): ?int

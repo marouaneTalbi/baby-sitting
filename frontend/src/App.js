@@ -9,8 +9,8 @@ import SignIn from './pages/Connexion/SignIn';
 import Dashboard from './pages/Home/Dashboard';
 import Worker from './pages/Worker/worker';
 import Profile from './pages/Profile/Profile';
-import Offres from './pages/Offers/Offers';
 import ConatctProfile from './pages/Profile/ContactProfile';
+import Agenda from './pages/Agenda/Agenda';
 
 function App() {
   return (
@@ -25,9 +25,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/workers" element={<Worker />} />
-          <Route path="/offres" element={<Offres />} />
+          <Route path="/agenda" element={<Agenda />} />
           <Route path="/contact" element={<ConatctProfile />} />
-
         </Routes>
         <div className="flex-grow">
         </div>

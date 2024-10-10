@@ -24,6 +24,7 @@ class GetCurrentUserController extends AbstractController
         }
 
         $profile = $user->getProfile();
+        $availability = $user->getAvailabilities();
 
         return new JsonResponse([
             'id' => $user->getId(),
@@ -40,6 +41,14 @@ class GetCurrentUserController extends AbstractController
                 'availability' => $profile ? $user->getProfile()->getAvailability() :null,
             ],
             'created_at' => $user->getCreatedAt(),
+            'availabilities' => array_map(function ($availability) {
+                return [
+                    'id' => $availability->getId(),
+                    'day_of_week' => $availability->getDayOfWeek(),
+                    'start_time' => $availability->getStartTime()->format('c'),
+                    'end_time' => $availability->getEndTime()->format('c'),
+                ];
+            }, $user->getAvailabilities()->toArray()),
         ]);
     }
 }

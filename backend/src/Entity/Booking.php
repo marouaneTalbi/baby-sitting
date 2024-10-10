@@ -5,10 +5,13 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\BookingRepository;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 #[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['service_provider_id' => 'exact'])]
 class Booking
 {
     #[ORM\Id]
@@ -22,7 +25,7 @@ class Booking
     private ?User $parent_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[Groups(['booking:read', 'booking:write'])]
+    #[Groups(['booking:read', 'booking:write', 'user:read'])]
     private ?User $service_provider_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]

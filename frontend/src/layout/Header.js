@@ -40,20 +40,16 @@ const Header = () => {
           }
           {
            role && role === "ROLE_PARENT" && (
-              <>          
                 <Link to="/workers" className="hover:text-gray-200">
                   Baby Sitters
                 </Link>
-              </>
             ) 
           }
           {
           role &&  role === "ROLE_WORKER" && (
-              <>          
-                <Link to="/offres" className="hover:text-gray-200">
-                  Find offers
+                <Link to="/agenda" className="hover:text-gray-200">
+                  Agenda
                 </Link>
-              </>
             ) 
           }
           {
@@ -62,12 +58,16 @@ const Header = () => {
                 Home
             </Link>
           }
-          <Link to="/about" className="hover:text-gray-200">
-            About
-          </Link>
-          <Link to="/contact" className="hover:text-gray-200">
-            Contact
-          </Link>
+            <Link to="/about" className="hover:text-gray-200">
+              About
+            </Link>
+          {
+            role && role === "ROLE_PARENT" && 
+            <Link to="/contact" className="hover:text-gray-200">
+              Contact
+            </Link>
+          }
+     
         </nav>
 
         {
