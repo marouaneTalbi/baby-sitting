@@ -26,6 +26,7 @@ use App\Controller\UserAvailabilities;
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     operations: [
+        new Get(),
         new Get(
             uriTemplate: '/me',
             controller: GetCurrentUserController::class,
@@ -49,7 +50,6 @@ use App\Controller\UserAvailabilities;
         ),
         new GetCollection(),
         new Put(),
-        new Get(),
         new Get(
             uriTemplate: '/users_availability/{id}',
             controller: UserAvailabilities::class,
@@ -119,6 +119,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private Collection $availabilities;
 
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Notification::class)]
+    private Collection $notifications;
+
     
 
     public function __construct()
@@ -128,6 +131,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reviews = new ArrayCollection();
         $this->availabilities = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -372,5 +376,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getServices(): array
     {
         return array_map(fn($userService) => $userService->getService(), $this->userServices->toArray());
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getParent() === $this) {
+                $notification->setParent(null);
+            }
+        }
+
+        return $this;
     }
 }

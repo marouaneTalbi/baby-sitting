@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import useCurrentUser from '../hooks/useAuth';
 import Dropdown from '../components/DropDown';
+import NotifDropdown from '../components/NotifDropDown';
 
 
 const Header = () => {
@@ -22,12 +23,10 @@ const Header = () => {
 
   return (
     <header className="bg-blue-600 text-white shadow-md">
-
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <div className="text-xl font-bold">
           <Link to="/">BaBy-Sit</Link>
         </div>
-
         <nav className="flex space-x-4">
           {
             role && role === "ROLE_ADMIN" && (
@@ -61,13 +60,6 @@ const Header = () => {
             <Link to="/about" className="hover:text-gray-200">
               About
             </Link>
-          {
-            role && role === "ROLE_PARENT" && 
-            <Link to="/contact" className="hover:text-gray-200">
-              Contact
-            </Link>
-          }
-     
         </nav>
 
         {
@@ -88,7 +80,12 @@ const Header = () => {
           </div>
         }
         <div className="space-x-4">
+          {  role && <NotifDropdown  placeholder="Notifications" /> }
+
+        </div>
+        <div className="space-x-4">
           {  role && <Dropdown  placeholder="Profile" /> }
+
         </div>
       </div>
 

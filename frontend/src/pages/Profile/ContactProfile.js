@@ -5,13 +5,12 @@ import WeeklyCalendar from '../../components/Calendrier';
 
 const ConatctProfile = () => {
     const location = useLocation();
-    const [user, setUser] = useState();
     const [availabilities, setAvailabilities] = useState();
     const [worker, setWorker] = useState();
     const [service, setService] = useState();
 
     useEffect(() => {
-        getWorkers().then(setUser)
+        getWorkers()
         const link =  location.search.split('?').filter(item => item !== '')
         const idWorker = link[0].replace('id=','') 
         setWorker(idWorker)
@@ -22,7 +21,6 @@ const ConatctProfile = () => {
     const getBookingsOfWorker = async () => {
         const link =  location.search.split('?').filter(item => item !== '')
         const idWorker = link[0].replace('id=','') 
-
         if(idWorker) {
             try {
                 const endpoint = `/api/bookings?service_provider_id=${idWorker}`; 
@@ -91,7 +89,7 @@ const ConatctProfile = () => {
     <main className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="p-4">
             {
-                availabilities ? <WeeklyCalendar availabilities={availabilities} workerId={worker} serivceId={service}  /> : 'Loding ...'
+                availabilities  ? <WeeklyCalendar availabilities={availabilities} workerId={worker} serivceId={service}  /> : 'Loding s...'
             }
         </div>
     </main>

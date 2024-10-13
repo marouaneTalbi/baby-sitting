@@ -11,6 +11,7 @@ import Worker from './pages/Worker/worker';
 import Profile from './pages/Profile/Profile';
 import ConatctProfile from './pages/Profile/ContactProfile';
 import Agenda from './pages/Agenda/Agenda';
+import Notifications from './pages/Notifications/notification';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/workers" element={<Worker />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/contact" element={<ConatctProfile />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Routes>
         <div className="flex-grow">
         </div>

@@ -10,6 +10,7 @@ const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sat
 const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
     const [showAlert, setShowAlert] = useState(false);
     const [availability, setAvailability] = useState();
+    const [newAvailabilitys, setNewAvailabilitys] = useState(availabilities);
     const user = useCurrentUser();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleOpenModal = () => setIsModalOpen(true);
@@ -28,9 +29,9 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
         setEndTime(e.target.value);
     };
 
+    // handle for worker to add Availability
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const { start, end } = dateTimeService(day, startTime, endTime);
             const endpoint = updatedAvailability ?  `/api/availabilities/${updatedAvailability.id}` :`/api/availabilities`; 
@@ -54,6 +55,7 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
         setShowAlert(false);
     };
 
+    // handle for parent to add book a Availability
     const handleReservation = async () => {
         if(user) {
             try {
@@ -69,15 +71,38 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
                     endTime: availability.end_time,
                     createAt: new Date().toISOString()
                 };
-
                 const response = await sendRequest(endpoint, method, data, true);
+                setAvailability(availabilities)
                 handleCloseAlert()
+                sendNootif(workerId)
                 return response;
             } catch (error) {
                 console.error('Failed to get Users:', error); 
             }
         }
       };
+
+    const sendNootif = async (workerId) => {
+        if(workerId && user) {
+            try {
+                const endpoint = `/api/notifications`; 
+                const method = 'post';
+                const data = {
+                    parent: `/api/users/${user.id}`,
+                    seen: false,
+                    seenByProvider: false,
+                    serviceProvider: `/api/users/${workerId}`
+                };
+                const response = await sendRequest(endpoint, method, data, true);
+                return response;
+            } catch (error) {
+                console.error('Failed to get Users:', error); 
+            }
+        } else {
+            console.error('Fpas de worker id:', workerId); 
+        }
+     
+    } 
 
     const handlevailablity = async (availability) => {
         if (availability.status !== 'reserved') {
@@ -97,7 +122,6 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
         setDay(day)
         setUpdatedAvailability(availability)
     }       
-
 
   return (
     <>
@@ -172,7 +196,7 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
                     <div className="col-span-1 text-center border border-gray-300">{`${hour}:00`}</div>
 
                         {daysOfWeek.map((day, index) => {
-                        const availability = availabilities.find(a => a.day_of_week === day);
+                        const availability = newAvailabilitys.find(a => a.day_of_week === day);
                         const startTime = availability ? new Date(availability.start_time).getHours() : null;
                         const endTime = availability ? new Date(availability.end_time).getHours() : null;
                         const isAvailable = availability && hour >= startTime && hour < endTime;
@@ -182,7 +206,8 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
                             <>
                                 {
                                     user && role !== 'ROLE_WORKER' ?
-                                ( <div
+                                    (
+                                    <div
                                         key={index}
                                         onClick={() => isAvailable && handlevailablity(availability)}
                                         className={`border border-gray-300 text-center ${
@@ -190,16 +215,18 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
                                         }`}
                                         >
                                         {isAvailable ? (isReserved ? 'Réservé' : 'Disponible') : ''}
-                                    </div>) :
-
-                                    ( <div
+                                    </div>
+                                    ) :
+                                    ( 
+                                    <div
                                         key={index}
                                         onClick={() => !isReserved && addAvailablity(availability, day)}
                                         className={`border border-gray-300 text-center ${
                                             isAvailable ? (isReserved ? 'bg-orange-200' : 'bg-green-200') : ''
-                                        }`}
-                                        >
-                                        {isAvailable ? (isReserved ? 'Réservé' : 'Disponible') : ''}
+                                        }`}>
+                                        {
+                                            isAvailable ? (isReserved ? 'Réservé' : 'Disponible') : ''
+                                        }
                                     </div>
                                     )
                                 }
