@@ -31,17 +31,6 @@ class UserRepository extends ServiceEntityRepository
             ->getArrayResult();  
     }
 
-    public function findUserAvailabilities(int $userId): array
-    {
-        return $this->createQueryBuilder('u')
-            ->leftJoin('u.availabilities', 'a')
-            ->addSelect('a')
-            ->where('u.id = :userId')
-            ->setParameter('userId', $userId)
-            ->getQuery()
-            ->getArrayResult();
-    }
-
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

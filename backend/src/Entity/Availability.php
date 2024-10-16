@@ -7,9 +7,22 @@ use App\Repository\AvailabilityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\GetCollection;
+
 
 #[ORM\Entity(repositoryClass: AvailabilityRepository::class)]
 #[ApiResource]
+#[ApiResource(
+    uriTemplate: '/users/{id}/availabilities', 
+    uriVariables: [
+        'id' => new Link(
+            fromClass: User::class,
+            fromProperty: 'availabilities'
+        )
+    ], 
+    operations: [new GetCollection()]
+)]
 class Availability
 {
     #[ORM\Id]
@@ -19,6 +32,7 @@ class Availability
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'availabilities')]
+    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['user:read', 'availability:read'])]
     private ?User $user = null;
 
@@ -26,11 +40,11 @@ class Availability
     #[Groups(['user:read', 'availability:read'])]
     private ?string $day_of_week = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: 'datetime')]
     #[Groups(['user:read', 'availability:read'])]
     private ?\DateTimeInterface $start_time = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: 'datetime')]
     #[Groups(['user:read', 'availability:read'])]
     private ?\DateTimeInterface $end_time = null;
 

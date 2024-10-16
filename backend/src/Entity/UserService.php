@@ -7,6 +7,7 @@ use App\Repository\UserServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserServiceRepository::class)]
+#[ApiResource]
 #[ApiResource(
     normalizationContext: ['groups' => ['user_service:read']]
 )]

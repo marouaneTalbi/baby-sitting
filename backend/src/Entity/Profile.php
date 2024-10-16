@@ -3,22 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-
-
-#[ORM\Entity(repositoryClass: ProfileRepository::class)]
-#[ApiResource]
-
-        
+#[ORM\Entity]
+#[ApiResource()]
+#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])] 
 class Profile
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['profile:read', 'user:read'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'profile', cascade: ['persist', 'remove'])]
@@ -26,26 +22,27 @@ class Profile
     private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['profile:write'])]
+    #[Groups(['profile:read', 'user:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['profile:write'])]
+    #[Groups(['profile:read', 'user:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['profile:write'])]
+    #[Groups(['profile:read', 'user:read'])]
     private ?string $rate_per_hour = null;
 
     #[ORM\Column]
+    #[Groups(['profile:read', 'user:read'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['profile:write'])]
+    #[Groups(['profile:read', 'user:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['profile:write'])]
+    #[Groups(['profile:read', 'user:read'])]
     private ?string $availability = null;
 
     public function __construct()
@@ -72,7 +69,7 @@ class Profile
 
     public function getPhone(): ?string
     {
-        return $this->phone ?? 'N/A';
+        return $this->phone;
     }
 
     public function setPhone(?string $phone): static
@@ -106,18 +103,6 @@ class Profile
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -138,6 +123,18 @@ class Profile
     public function setAvailability(string $availability): static
     {
         $this->availability = $availability;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

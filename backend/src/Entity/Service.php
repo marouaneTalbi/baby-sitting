@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
-#[ApiResource] // Expose la ressource à l'API Platform
+#[ApiResource] 
 class Service
 {
     #[ORM\Id]

@@ -6,7 +6,6 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\DataPersister\UserDataPersister;
-
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Controller\GetCurrentUserController;
@@ -18,8 +17,11 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\ApiSubresource;
 use App\Controller\UserWithProfileController;
 use App\Controller\UserAvailabilities;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -36,6 +38,12 @@ use App\Controller\UserAvailabilities;
             ],
             normalizationContext: ['groups' => ['user:read']],
         ),
+        // new Get(
+        //     uriTemplate: '/me',
+        //     security: "is_granted('IS_AUTHENTICATED_FULLY')",
+        //     securityMessage: "Vous devez être connecté pour accéder à vos informations.",
+        //     provider: 'self' 
+        // ),
         new GetCollection(
             uriTemplate: '/users_with_profiles',
             controller: UserWithProfileController::class,
@@ -50,14 +58,13 @@ use App\Controller\UserAvailabilities;
         ),
         new GetCollection(),
         new Put(),
-        new Get(
-            uriTemplate: '/users_availability/{id}',
-            controller: UserAvailabilities::class,
-        ),
         new Delete(),
-    ]
+    ],
 )]
 
+
+
+#[ApiFilter(SearchFilter::class, properties: ['role' => 'exact'])] 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -67,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'profile_user:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -96,7 +103,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, UserService>
      */
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: UserService::class)]
-    #[Subresource]
     #[Groups('user')]
     private Collection $userServices;
 
@@ -117,6 +123,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Availability::class, fetch: 'EAGER')]
     #[Groups(['user:read'])]
+    #[ApiSubresource()]
     private Collection $availabilities;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Notification::class)]
