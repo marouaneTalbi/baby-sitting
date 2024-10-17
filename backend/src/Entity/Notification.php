@@ -18,23 +18,8 @@ use App\Controller\UserNotificationsAndServiceProviders;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ApiResource(
-    operations:[
-        new Get(),
-        new Get(
-            uriTemplate: '/notification/users/{id}',
-            controller: UserNotificationsAndServiceProviders::class,
-            read: false,
-            openapiContext: [
-                'summary' => 'Récupère les notification et leur users lié a ceux ci.',
-            ],
-            normalizationContext: ['groups' => ['notifications:read']],
-        ),
-        new GetCollection(),
-        new Put(),
-        new Delete(),
-        new Post(),
-        
-    ]
+    normalizationContext: ['groups' => ['notifications:read']],
+    denormalizationContext: ['groups' => ['notifications:write']],
 )]
 #[ApiFilter(SearchFilter::class, properties: [
     'parent' => 'exact',

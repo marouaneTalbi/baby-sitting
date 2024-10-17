@@ -10,10 +10,10 @@ const Worker = () => {
 
     const getWorkers = async () => {
         try {
-            const endpoint = `/api/users_with_profiles`; 
+            const endpoint = `/api/users?role=ROLE_WORKER`; 
             const method = 'get';
             const response = await sendRequest(endpoint, method, {}, true);
-            return response;
+            return response['hydra:member'];
         } catch (error) {
             console.error('Failed to get Users:', error); 
         }

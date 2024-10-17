@@ -24,7 +24,6 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiFilter(SearchFilter::class, properties: ['role' => 'exact'])] 
@@ -50,19 +49,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
         //     securityMessage: "Vous devez être connecté pour accéder à vos informations.",
         //     provider: 'self' 
         // ),
-        new GetCollection(
-            uriTemplate: '/users_with_profiles',
-            controller: UserWithProfileController::class,
-            normalizationContext: ['groups' => ['user:read']],
-            openapiContext: [
-                'summary' => 'Récupère tous les utilisateurs avec leurs profils associés.',
-            ],
-        ),
         new GetCollection(),
         new Put(),
         new Delete(),
     ],
-    denormalizationContext: ['groups' => ['user:write']]
+    denormalizationContext: ['groups' => ['user:write']],
+    normalizationContext: ['groups' => ['user:read']],
+
 )]
 
 
@@ -71,23 +64,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'notifications:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'notifications:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'notifications:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'notifications:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'notifications:read'])]
     private ?string $role = null;
 
     #[ORM\Column(length: 255)]
@@ -98,14 +91,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'notifications:read'])]
     private ?Profile $profile = null;
 
     /**
      * @var Collection<int, UserService>
      */
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: UserService::class)]
-    #[Groups('user')]
+    #[Groups(['user:read'])]
     private Collection $userServices;
 
     /**

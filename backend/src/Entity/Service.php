@@ -5,22 +5,26 @@ namespace App\Entity;
 use App\Repository\ServiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
-#[ApiResource] 
+#[ApiResource()] 
 class Service
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $description = null;
 
     /**

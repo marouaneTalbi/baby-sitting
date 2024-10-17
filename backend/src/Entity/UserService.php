@@ -5,12 +5,11 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: UserServiceRepository::class)]
 #[ApiResource]
-#[ApiResource(
-    normalizationContext: ['groups' => ['user_service:read']]
-)]
 #[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])]
 class UserService
 {
@@ -24,7 +23,7 @@ class UserService
     private ?User $user_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'userServices')]
-    #[Groups(['user_service:read'])]
+    #[Groups(['user_service:read', 'user:read'])]
     #[Subresource] 
     private ?Service $service = null;
 

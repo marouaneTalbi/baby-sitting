@@ -11,6 +11,7 @@ const Notifications = ({user}) => {
             setRole(user.role.join())
             getNotifs().then((notifs) => {
                 if (notifs) {
+                    console.log(notifs)
                     setNotifications(notifs);
                 }
             });
@@ -19,11 +20,13 @@ const Notifications = ({user}) => {
 
     const getNotifs = async () => { 
         if (user) {
-            const endpoint = `/api/notification/users/${user.id}`; 
+            const isParent = role === 'ROLE_PARENT' ? 'parent' : 'serviceProvider'
+            const endpoint = `/api/notifications?${isParent}=${user.id}`; 
             const method = 'get';
             try {
                 const response = await sendRequest(endpoint, method, {}, true);
-                return response;
+                console.log(response)
+                return response['hydra:member'];
             } catch (error) {
                 console.error('Failed to get Users:', error); 
             }
@@ -53,8 +56,8 @@ const Notifications = ({user}) => {
                                 {
                                     role === 'ROLE_PARENT' ? 
 
-                                    `Vous avez toutes les information de ${notif.service_provider.lastname}, contactez le pour des que vous pouvez.` :
-                                    `${notif.service_provider.lastname} a reserver un de vos creneau il vous contacteras dans les prochaines heures` 
+                                    `Vous avez toutes les information de ${notif.serviceProvider.lastname}, contactez le pour des que vous pouvez.` :
+                                    `${notif.serviceProvider.lastname} a reserver un de vos creneau il vous contacteras dans les prochaines heures` 
 
                                 }
                             </p>
@@ -65,27 +68,27 @@ const Notifications = ({user}) => {
                                         <div>
                                         <h3 className="text-lg font-medium text-gray-700">Service Provider:</h3>
                                         <p className="text-gray-600">
-                                            <span className="font-semibold">Nom: </span>{notif.service_provider.lastname}
+                                            <span className="font-semibold">Nom: </span>{notif.serviceProvider.lastname}
                                         </p>
                                         <p className="text-gray-600">
-                                            <span className="font-semibold">Prénom: </span>{notif.service_provider.firstname}
+                                            <span className="font-semibold">Prénom: </span>{notif.serviceProvider.firstname}
                                         </p>
                                         <p className="text-gray-600">
-                                            <span className="font-semibold">Email: </span>{notif.service_provider.email}
+                                            <span className="font-semibold">Email: </span>{notif.serviceProvider.email}
                                         </p>
-                                        { notif.service_provider.profile && (
+                                        { notif.serviceProvider.profile && (
                                             <>
                                                 <p className="text-gray-600">
-                                                    <span className="font-semibold">Adresse: </span>{notif.service_provider.profile.address}
+                                                    <span className="font-semibold">Adresse: </span>{notif.serviceProvider.profile.address}
                                                 </p>
                                                 <p className="text-gray-600">
-                                                    <span className="font-semibold">Téléphone: </span>{notif.service_provider.profile.phone}
+                                                    <span className="font-semibold">Téléphone: </span>{notif.serviceProvider.profile.phone}
                                                 </p>
                                                 <p className="text-gray-600">
-                                                    <span className="font-semibold">Taux horaire: </span>{notif.service_provider.profile.rate_per_hour} €
+                                                    <span className="font-semibold">Taux horaire: </span>{notif.serviceProvider.profile.rate_per_hour} €
                                                 </p>
                                                 <p className="text-gray-600">
-                                                    <span className="font-semibold">Description: </span>{notif.service_provider.profile.description}
+                                                    <span className="font-semibold">Description: </span>{notif.serviceProvider.profile.description}
                                                 </p>
                                             </>
                                         )}

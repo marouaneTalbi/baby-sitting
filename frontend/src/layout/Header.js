@@ -29,6 +29,10 @@ const Header = ({user}) => {
                 <Link to="/users" className="hover:text-gray-200">
                   Users
                 </Link>
+
+                <Link to="/dashboard" className="hover:text-gray-200">
+                  Dasboard
+                </Link>
               </>
             ) 
           }
@@ -52,9 +56,7 @@ const Header = ({user}) => {
                 Home
             </Link>
           }
-            <Link to="/dashboard" className="hover:text-gray-200">
-              Dasboard
-            </Link>
+       
         </nav>
 
         {

@@ -22,23 +22,23 @@ class Profile
     private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['profile:read', 'user:read'])]
+    #[Groups(['profile:read', 'user:read', 'notifications:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['profile:read', 'user:read'])]
+    #[Groups(['profile:read', 'user:read', 'notifications:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['profile:read', 'user:read'])]
+    #[Groups(['profile:read', 'user:read', 'notifications:read'])]
     private ?string $rate_per_hour = null;
 
     #[ORM\Column]
-    #[Groups(['profile:read', 'user:read'])]
+    #[Groups(['profile:read', 'user:read', 'notifications:read'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['profile:read', 'user:read'])]
+    #[Groups(['profile:read', 'user:read', 'notifications:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]

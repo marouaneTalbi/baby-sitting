@@ -15,11 +15,12 @@ const NotifDropdown = ({ placeholder, user }) => {
     let data ;
 
     if(role === 'ROLE_PARENT') {
+
          data = {
             seen: true,
-            seenByProvider: notif.seen_by_provider,
+            seenByProvider: notif.seenByProvider,
             parent: `/api/users/${notif.parent.id}`,
-            serviceProvider: `/api/users/${notif.service_provider.id}`
+            serviceProvider: `/api/users/${notif.serviceProvider.id}`
 
         };
     } else if (role !== 'ROLE_PARENT') {
@@ -27,12 +28,11 @@ const NotifDropdown = ({ placeholder, user }) => {
             seen: notif.seen,
             seenByProvider: true,
             parent: `/api/users/${notif.parent.id}`,
-            serviceProvider: `/api/users/${notif.service_provider.id}`
+            serviceProvider: `/api/users/${notif.serviceProvider.id}`
         };
     }
-
     try {
-        const endpoint = `/api/notifications/${notif.notification_id}`; 
+        const endpoint = `/api/notifications/${notif.id}`; 
         const method = 'put';
         const response = await sendRequest(endpoint, method, data, true);
         navigate("/notifications");
@@ -54,15 +54,16 @@ const NotifDropdown = ({ placeholder, user }) => {
 
   const getNotifs = async () => { 
     if(user) {
-        const role  = user.role.join()
+        const role  = user.role.join();
+        const isParent = role === 'ROLE_PARENT' ? 'parent' : 'service_provider'
         try {
-            const endpoint = `/api/notification/users/${user.id}`; 
+            const endpoint = `/api/notifications?${isParent}=${user.id}`; 
             const method = 'get';
             const response = await sendRequest(endpoint, method, {}, true);
-            const updatedNotifications = response.map((notif) => {
+            const updatedNotifications = response['hydra:member'].map((notif) => {
                 const message = role === 'ROLE_PARENT' ? 
-                `Vous avez reserver un creneau de ${notif.service_provider.firstname} ${notif.service_provider.lastname}`
-                :`${notif.service_provider.firstname} ${notif.service_provider.lastname} a reserver un de vos creneau ..`
+                `Vous avez reserver un creneau de ${notif.serviceProvider.firstname} ${notif.serviceProvider.lastname}`
+                :`${notif.parent.firstname} ${notif.parent.lastname} a reserver un de vos creneau ..`
                 return {...notif, message: message}
             })
             return updatedNotifications;
