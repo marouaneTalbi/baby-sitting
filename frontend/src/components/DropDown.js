@@ -19,6 +19,7 @@ const Dropdown = ({ placeholder }) => {
         navigate("/signin");
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        window.location.reload();
     }
   };
 

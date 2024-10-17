@@ -47,9 +47,9 @@ const Worker = () => {
 
     return (
         <main className="min-h-screen flex items-center justify-center bg-gray-100">
-
-            <div className="flex flex-wrap justify-center p-3">   
-                <div className="flex space-x-4 mb-4 p-3">
+           { filteredProfiles !== undefined ?
+             <div className="flex flex-wrap justify-center p-3">   
+                <div className="flex space-x-3 mb-4 p-3">
                     <input
                         type="number"
                         placeholder="Max Price"
@@ -57,7 +57,6 @@ const Worker = () => {
                         onChange={(e) => setPriceFilter(e.target.value)}
                         className="p-2 border rounded"
                     />
-
                     <input
                         type="text"
                         placeholder="Address"
@@ -72,12 +71,13 @@ const Worker = () => {
                         Apply Filters
                     </button>
                 </div>
-                <div className="flex flex-wrap justify-center p-3">
+                <div className="flex flex-wrap justify-start p-3">
                     {filteredProfiles ? filteredProfiles.map((profile) => (
                         <CardProfile key={profile.id} profile={profile} />
                     )) : 'Loading ...'}
                 </div>
-            </div>
+            </div> : 'Loding ...'
+           }
         </main>
     );
 };

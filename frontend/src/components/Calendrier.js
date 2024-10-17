@@ -1,127 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import sendRequest from '../services/aixosRequestFunction';
-import useCurrentUser from '../hooks/useAuth';
 import Alert from './Alert';
 import Modal from './Modal';
-import dateTimeService from '../services/dateTimeService';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
-    const [showAlert, setShowAlert] = useState(false);
-    const [availability, setAvailability] = useState();
-    const [newAvailabilitys, setNewAvailabilitys] = useState(availabilities);
-    const user = useCurrentUser();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const handleOpenModal = () => setIsModalOpen(true);
-    const handleCloseModal = () => setIsModalOpen(false);
-    const [role, setRole] = useState();
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [day, setDay] = useState('');
-    const [updatedAvailability, setUpdatedAvailability] = useState();
+const WeeklyCalendar = ({
+    showAlert, startTime, endTime, role, closeAlert, addAvailability,
+    handlevailablity, handleStartTimeChange, handleEndTimeChange, isModalOpen,
+    handleSubmit, handleReservation, user, availabilities, handleCloseModal
+}) => {
 
-    const handleStartTimeChange = (e) => {
-        setStartTime(e.target.value);
-    };
-
-    const handleEndTimeChange = (e) => {
-        setEndTime(e.target.value);
-    };
-
-    // handle for worker to add Availability
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const { start, end } = dateTimeService(day, startTime, endTime);
-            const endpoint = updatedAvailability ?  `/api/availabilities/${updatedAvailability.id}` :`/api/availabilities`; 
-            const method = updatedAvailability ? 'put' : 'post';
-            const data = {
-                user: `/api/users/${user.id}`,
-                dayOfWeek: day,
-                startTime: start,
-                endTime: end
-            };
-            const response = await sendRequest(endpoint, method, data, true);
-            handleCloseModal()
-            setAvailability(availabilities)
-            return response;
-        } catch (error) {
-            console.error('Failed to get Users:', error); 
-        }
-    }
-
-    const handleCloseAlert = async () => {
-        setShowAlert(false);
-    };
-
-    // handle for parent to add book a Availability
-    const handleReservation = async () => {
-        if(user) {
-            try {
-                const endpoint = `/api/bookings`; 
-                const method = 'post';
-                const data = {
-                    status: 'reserved',
-                    date: new Date().toISOString(),
-                    parentId: `/api/users/${user.id}`,
-                    serviceProviderId: `/api/users/${workerId}`,
-                    serviceId: `/api/services/${serivceId}`,
-                    startTime: availability.start_time,
-                    endTime: availability.end_time,
-                    createAt: new Date().toISOString()
-                };
-                const response = await sendRequest(endpoint, method, data, true);
-                setAvailability(availabilities)
-                handleCloseAlert()
-                sendNootif(workerId)
-                return response;
-            } catch (error) {
-                console.error('Failed to get Users:', error); 
-            }
-        }
-      };
-
-    const sendNootif = async (workerId) => {
-        if(workerId && user) {
-            try {
-                const endpoint = `/api/notifications`; 
-                const method = 'post';
-                const data = {
-                    parent: `/api/users/${user.id}`,
-                    seen: false,
-                    seenByProvider: false,
-                    serviceProvider: `/api/users/${workerId}`
-                };
-                const response = await sendRequest(endpoint, method, data, true);
-                return response;
-            } catch (error) {
-                console.error('Failed to get Users:', error); 
-            }
-        } else {
-            console.error('Fpas de worker id:', workerId); 
-        }
-     
-    } 
-
-    const handlevailablity = async (availability) => {
-        if (availability.status !== 'reserved') {
-            setShowAlert(true);
-            setAvailability(availability)
-        }
-    } 
-
-    useEffect(() => {
-        if(user) {
-            setRole(user.role.join())
-        }
-    }, [user])
-
-    const addAvailablity = (availability,day) => {
-        setIsModalOpen(true)
-        setDay(day)
-        setUpdatedAvailability(availability)
-    }       
 
   return (
     <>
@@ -130,11 +18,10 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
                 message="Etes vous sur de vouloir reserver ce creneau ?"
                 primaryButtonText="Réserver"
                 secondaryButtonText="Fermer"
-                onPrimaryButtonClick={handleReservation}
-                onSecondaryButtonClick={handleCloseAlert}
+                onPrimaryButtonClick={()=>handleReservation()}
+                onSecondaryButtonClick={closeAlert}
             />
         )}
-
         {
             user && role === 'ROLE_WORKER' &&
             <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Ajouter un creneau">
@@ -196,7 +83,7 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
                     <div className="col-span-1 text-center border border-gray-300">{`${hour}:00`}</div>
 
                         {daysOfWeek.map((day, index) => {
-                        const availability = newAvailabilitys.find(a => a.day_of_week === day);
+                        const availability = availabilities.find(a => a.day_of_week === day);
                         const startTime = availability ? new Date(availability.start_time).getHours() : null;
                         const endTime = availability ? new Date(availability.end_time).getHours() : null;
                         const isAvailable = availability && hour >= startTime && hour < endTime;
@@ -220,7 +107,7 @@ const WeeklyCalendar = ({ availabilities, workerId=null, serivceId=null }) => {
                                     ( 
                                     <div
                                         key={index}
-                                        onClick={() => !isReserved && addAvailablity(availability, day)}
+                                        onClick={() => !isReserved && addAvailability(availability, day)}
                                         className={`border border-gray-300 text-center ${
                                             isAvailable ? (isReserved ? 'bg-orange-200' : 'bg-green-200') : ''
                                         }`}>

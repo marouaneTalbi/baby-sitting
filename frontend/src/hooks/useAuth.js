@@ -3,17 +3,11 @@ import {jwtDecode} from 'jwt-decode';
 import sendRequest from '../services/aixosRequestFunction';
 
 const useCurrentUser = () => {
-  const [decodedToken, setDecodedToken] = useState(null);
   const [user, setUser] = useState(null);
-
 
   const getUserProfile = async () => {
     try {
-        return sendRequest(
-            `/api/me`,
-            'get',
-             false
-        ).then((response) => {
+        return sendRequest(  `/api/me`, 'get',false).then((response) => {
             return response
         })
     } catch (error) {
@@ -22,17 +16,18 @@ const useCurrentUser = () => {
 };
 
   useEffect(() => {
-    const token = localStorage.getItem('user');
+    const token = localStorage.getItem('token'); 
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        getUserProfile().then(setUser)
-        setDecodedToken(decoded);
+        getUserProfile().then(setUser); 
       } catch (error) {
-        console.error('Invalid token', error);
+        console.error('Token invalide', error);
       }
     }
-  }, ['user']);
+  }, []); 
+
+  return user; 
 
   return user;
 };

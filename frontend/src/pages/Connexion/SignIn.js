@@ -23,7 +23,6 @@ const SignIn = () => {
             },
              false
         ).then((response) => {
-          console.log(response)
             if(response) {
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('refresh_token', response.refresh_token);
@@ -44,7 +43,6 @@ const SignIn = () => {
       try {
           const success = await login(email, password);
           if (success) {
-              toast.success('Vous êtes Connecté !');
               setIsLoading(false);
               navigate("/dashboard");
           }

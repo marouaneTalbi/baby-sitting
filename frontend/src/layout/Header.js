@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import useCurrentUser from '../hooks/useAuth';
 import Dropdown from '../components/DropDown';
 import NotifDropdown from '../components/NotifDropDown';
 
-
-const Header = () => {
-  const user = useCurrentUser();
+const Header = ({user}) => {
   const [role, setRole] = useState()
   const location = useLocation();
 
@@ -17,9 +14,7 @@ const Header = () => {
     if(location.pathname === "/signin") {
       setRole()
     }
-
-  }, [user,location])
-
+  }, [user])
 
   return (
     <header className="bg-blue-600 text-white shadow-md">
@@ -31,7 +26,7 @@ const Header = () => {
           {
             role && role === "ROLE_ADMIN" && (
               <>          
-                <Link to="/" className="hover:text-gray-200">
+                <Link to="/users" className="hover:text-gray-200">
                   Users
                 </Link>
               </>
@@ -57,8 +52,8 @@ const Header = () => {
                 Home
             </Link>
           }
-            <Link to="/about" className="hover:text-gray-200">
-              About
+            <Link to="/dashboard" className="hover:text-gray-200">
+              Dasboard
             </Link>
         </nav>
 
@@ -80,7 +75,7 @@ const Header = () => {
           </div>
         }
         <div className="space-x-4">
-          {  role && <NotifDropdown  placeholder="Notifications" /> }
+          {  role && role !== "ROLE_ADMIN" && <NotifDropdown  placeholder="Notifications" user={user} /> }
 
         </div>
         <div className="space-x-4">

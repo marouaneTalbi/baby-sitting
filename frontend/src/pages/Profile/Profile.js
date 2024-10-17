@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import useCurrentUser from '../../hooks/useAuth';
 import Modal from '../../components/Modal';
 import sendRequest from '../../services/aixosRequestFunction';
 
-const Profile = () => {
-  const user = useCurrentUser();
+const Profile = ({user}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [role, setRole] = useState();
   const [phone, setPhone] = useState();
@@ -15,7 +13,6 @@ const Profile = () => {
 
   useEffect(() => {
     if(user) {
-        console.log(user)
         setRole(user.role.join())
         setPhone(user.profile.phone)
         setAddress(user.profile.address)

@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import sendRequest from '../services/aixosRequestFunction';
-import useCurrentUser from '../hooks/useAuth';
 
-const NotifDropdown = ({ placeholder }) => {
+const NotifDropdown = ({ placeholder, user }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const [options, setOptions] = useState([]);
   const toggleDropdown = () => setIsOpen(!isOpen);
-  const user = useCurrentUser();
   const navigate = useNavigate();
 
   const updateNotifStatus = async (notif) => {
@@ -48,7 +46,6 @@ const NotifDropdown = ({ placeholder }) => {
     if(user){
         getNotifs().then((notifs) => {
             if(notifs) {
-                console.log(notifs)
                 setOptions(notifs)
             }
         })
@@ -94,8 +91,10 @@ const NotifDropdown = ({ placeholder }) => {
                             className="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white transition duration-200"
                             onClick={() => updateNotifStatus(option)}
                         >
-                            {(user.role.join() === "ROLE_PARENT") &&!option.seen && option.message}
-                            {(user.role.join() !== "ROLE_PARENT") &&!option.seenByProvider && option.message}
+                            {(user.role.join() === "ROLE_PARENT") && !option.seen && option.message}
+                            {(user.role.join() !== "ROLE_PARENT") && !option.seenByProvider && option.message}
+                            { !option.seen || !option.seenByProvider && 'Aucune notification disponible.'}
+
                         </div>
                     ))
                 ) : (

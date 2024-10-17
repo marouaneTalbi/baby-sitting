@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useCurrentUser from '../../hooks/useAuth';
 import sendRequest from '../../services/aixosRequestFunction';
 
-const Notifications = () => {
-    const user = useCurrentUser();
+const Notifications = ({user}) => {
     const [notifications, setNotifications] = useState([]);
     const [role, setRole] = useState();
 

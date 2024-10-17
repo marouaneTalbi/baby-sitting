@@ -22,13 +22,19 @@ use App\Controller\UserWithProfileController;
 use App\Controller\UserAvailabilities;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[ApiFilter(SearchFilter::class, properties: ['role' => 'exact'])] 
 #[ApiResource(
     operations: [
         new Get(),
+        new Post(
+            processor: UserDataPersister::class,
+            denormalizationContext: ['groups' => ['user:write']]
+        ),
         new Get(
             uriTemplate: '/me',
             controller: GetCurrentUserController::class,
@@ -52,19 +58,14 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                 'summary' => 'Récupère tous les utilisateurs avec leurs profils associés.',
             ],
         ),
-        new Post(
-            processor: UserDataPersister::class,
-            denormalizationContext: ['groups' => ['user:write']]
-        ),
         new GetCollection(),
         new Put(),
         new Delete(),
     ],
+    denormalizationContext: ['groups' => ['user:write']]
 )]
 
 
-
-#[ApiFilter(SearchFilter::class, properties: ['role' => 'exact'])] 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -74,7 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write', 'profile_user:read'])]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -86,10 +87,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $role = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:write'])]
     private ?string $password = null;
 
     #[ORM\Column]
