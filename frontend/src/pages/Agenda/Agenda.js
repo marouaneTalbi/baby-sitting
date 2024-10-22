@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import WeeklyCalendar from '../../components/Calendrier';
 import sendRequest from '../../services/aixosRequestFunction';
 import dateTimeService from '../../services/dateTimeService';
+import useCurrentUser from '../../hooks/useAuth';
 
-const Agenda = ({user}) => {
+const Agenda = () => {
+  const user = useCurrentUser();
   const [availabilities, setAvailabilities] = useState();
   const [updatedAvailability, setUpdatedAvailability] = useState();
   const [day, setDay] = useState('');
@@ -13,6 +15,7 @@ const Agenda = ({user}) => {
   const handleCloseModal = () => setIsModalOpen(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const currentUser = useCurrentUser();
 
   const getMyAvailabilities = async () => {
     if(user?.id) {
@@ -59,20 +62,20 @@ const Agenda = ({user}) => {
   }  
 
   const handleWorkerReservation = async (e) => {
+    // e.preventDefault();
      try {
         const { start, end } = dateTimeService(day, startTime, endTime);
         const endpoint = updatedAvailability ?  `/api/availabilities/${updatedAvailability.id}` :`/api/availabilities`; 
         const method = updatedAvailability ? 'put' : 'post';
         const data = {
-            user: `/api/users/${user.id}`,
+            user: `/api/users/${currentUser.id}`,
             dayOfWeek: day,
             startTime: start,
             endTime: end
         };
         const response = await sendRequest(endpoint, method, data, true);
         handleCloseModal()
-        // setAvailability(availabilities)
-        getMyAvailabilities()
+        getMyAvailabilities(currentUser)
         return response;
     } catch (error) {
         console.error('Failed to get Users:', error); 
@@ -84,8 +87,10 @@ const Agenda = ({user}) => {
   };
 
   useEffect(() => {
-    getMyAvailabilities()
-  }, [user])
+    if(currentUser){
+      getMyAvailabilities(currentUser)
+    }
+  }, [currentUser])
 
 
   const handleStartTimeChange = (e) => {
@@ -96,28 +101,25 @@ const handleEndTimeChange = (e) => {
     setEndTime(e.target.value);
 };
 
-
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="p-4">
             {
                 availabilities ? 
-
                 <WeeklyCalendar 
-                availabilities={availabilities}
-                addAvailability={addNewAvailablity}
-                handleSubmit={handleWorkerReservation}
-                handleEndTimeChange={handleEndTimeChange}
-                handleStartTimeChange={handleStartTimeChange}
-                startTime={startTime}
-                handleCloseModal={handleCloseModal}
-                endTime={endTime}
-                isModalOpen={isModalOpen}
-                user={user}
-                role={user.role.join()}
-                closeAlert={closeAlert}
-                showAlert={showAlert}
-
+                  availabilities={availabilities}
+                  addAvailability={addNewAvailablity}
+                  handleSubmit={handleWorkerReservation}
+                  handleEndTimeChange={handleEndTimeChange}
+                  handleStartTimeChange={handleStartTimeChange}
+                  startTime={startTime}
+                  handleCloseModal={handleCloseModal}
+                  endTime={endTime}
+                  isModalOpen={isModalOpen}
+                  user={user}
+                  role={user.role.join()}
+                  closeAlert={closeAlert}
+                  showAlert={showAlert}
                    /> : 'Loding ...'
             }
         </div>

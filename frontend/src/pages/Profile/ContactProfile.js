@@ -17,7 +17,6 @@ const ConatctProfile = ({user}) => {
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
 
-
     useEffect(() => {
         getWorkerAvailablities()
         const link =  location.search.split('?').filter(item => item !== '')
@@ -81,7 +80,7 @@ const ConatctProfile = ({user}) => {
                 
                     return availability;
                   });
-                  
+                
                 setAvailabilities(updatedAvailabilities)
                 return response;
             } else {
@@ -154,26 +153,27 @@ const ConatctProfile = ({user}) => {
     const closeAlert = async () => {
         setShowAlert(false);
     };
- 
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="p-4">
             {
-                availabilities  ? <WeeklyCalendar  
-                                        user={user} 
-                                        availabilities={availabilities} 
-                                        workerId={worker} 
-                                        serivceId={service}  
-                                        handleReservation={handleParentReservation}
-                                        handlevailablity={handleAilablity}
-                                        closeAlert={closeAlert}
-                                        handleCloseModal={handleCloseModal}
-                                        showAlert={showAlert}
-                                        startTime={startTime}
-                                        endTime={endTime}
-                                        isModalOpen={isModalOpen}
-                                        role={user.role.join()}
-                                    /> : 'Loding s...'
+                availabilities && user  ? 
+                <WeeklyCalendar  
+                    user={user} 
+                    availabilities={availabilities} 
+                    workerId={worker} 
+                    serivceId={service}  
+                    handleReservation={handleParentReservation}
+                    handlevailablity={handleAilablity}
+                    closeAlert={closeAlert}
+                    handleCloseModal={handleCloseModal}
+                    showAlert={showAlert}
+                    startTime={startTime}
+                    endTime={endTime}
+                    isModalOpen={isModalOpen}
+                    role={user.role.join()}
+                /> : 'Loding...'
                             
             }
         </div>

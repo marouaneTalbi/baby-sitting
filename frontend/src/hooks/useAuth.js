@@ -1,35 +1,39 @@
 import { useState, useEffect } from 'react';
 import {jwtDecode} from 'jwt-decode';
 import sendRequest from '../services/aixosRequestFunction';
+import { useUser } from './Auth';
 
 const useCurrentUser = () => {
-  const [user, setUser] = useState(null);
+  const [currentUser, setUser] = useState(null);
+  const { user, loading } = useUser();  
 
   const getUserProfile = async () => {
-    try {
-        return sendRequest(  `/api/me`, 'get',false).then((response) => {
-            return response
-        })
-    } catch (error) {
-        console.log('===>',error)
+    if(user){
+        try {
+            return sendRequest(  `/api/users?email=${user.username}`, 'get',false)
+            .then((response) => {
+                const userData = {...response['hydra:member'][0], role: user.roles}
+                return userData
+            })
+        } catch (error) {
+            console.log('===>',error)
+        }
     }
 };
 
   useEffect(() => {
     const token = localStorage.getItem('token'); 
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        getUserProfile().then(setUser); 
-      } catch (error) {
-        console.error('Token invalide', error);
-      }
+    if(user && token){
+          try {
+            getUserProfile().then(setUser); 
+          } catch (error) {
+            console.error('Token invalide', error);
+          }
     }
-  }, []); 
 
-  return user; 
+  }, [user]); 
 
-  return user;
+  return currentUser; 
 };
 
 export default useCurrentUser;

@@ -3,7 +3,7 @@ import UserForm from './UserForm';
 import ConfirmationModal from './ConfirmationModal';
 import sendRequest from '../../services/aixosRequestFunction';
 
-const Users = () => {
+const Users = ({user}) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,7 +27,7 @@ const Users = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [user]);
 
   const handleAdd = () => {
     setCurrentUser(null);
@@ -35,7 +35,6 @@ const Users = () => {
   };
 
   const handleEdit = (user) => {
-    console.log(user)
     setCurrentUser(user);
     setIsFormOpen(true);
   };
@@ -69,15 +68,20 @@ const Users = () => {
   };
 
   const showUserRole = (role) => {
-    const currentRole = role.join()
+    console.log(role)
 
-    if(currentRole == 'ROLE_WORKER') {
-      return 'Worker'
-    } else if (role == 'ROLE_PARENT') {
-      return 'Parent'
-    } else {
-      return 'Admin'
-    }
+    // if(role){
+    //   const currentRole = role.join()
+
+    //   if(currentRole == 'ROLE_WORKER') {
+    //     return 'Worker'
+    //   } else if (role == 'ROLE_PARENT') {
+    //     return 'Parent'
+    //   } else {
+    //     return 'Admin'
+    //   }
+    // }
+
   }
 
   if (loading) {
@@ -90,7 +94,7 @@ const Users = () => {
 
   return (
     <main className="min-h-screen bg-gray-100 p-8">
-      <div className="flex justify-between items-center mb-6">
+      {/* <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold text-gray-800">Utilisateurs</h1>
         <button
           onClick={handleAdd}
@@ -98,7 +102,7 @@ const Users = () => {
         >
           Ajouter un utilisateur
         </button>
-      </div>
+      </div> */}
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -107,7 +111,7 @@ const Users = () => {
               <th className="py-3 px-6 text-left">Prénom</th>
               <th className="py-3 px-6 text-left">Nom</th>
               <th className="py-3 px-6 text-left">Email</th>
-              <th className="py-3 px-6 text-left">Role</th>
+              {/* <th className="py-3 px-6 text-left">Role</th> */}
               <th className="py-3 px-6 text-center">Actions</th>
             </tr>
           </thead>
@@ -117,7 +121,7 @@ const Users = () => {
                 <td className="py-4 px-6">{user.firstname}</td>
                 <td className="py-4 px-6">{user.lastname}</td>
                 <td className="py-4 px-6">{user.email}</td>
-                <td className="py-4 px-6">{showUserRole(user.roles)}</td>
+                {/* <td className="py-4 px-6">{showUserRole(user)}</td> */}
                 <td className="py-4 px-6 text-center">
                   <button
                     onClick={() => handleEdit(user)}
@@ -149,6 +153,7 @@ const Users = () => {
       {isConfirmOpen && (
         <ConfirmationModal
           message={`Êtes-vous sûr de vouloir supprimer ${userToDelete.firstname} ${userToDelete.lastname} ?`}
+          user={user}
           onConfirm={confirmDelete}
           onCancel={() => setIsConfirmOpen(false)}
         />

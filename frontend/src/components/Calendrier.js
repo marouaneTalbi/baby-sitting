@@ -10,7 +10,6 @@ const WeeklyCalendar = ({
     handleSubmit, handleReservation, user, availabilities, handleCloseModal
 }) => {
 
-
   return (
     <>
         {showAlert && (

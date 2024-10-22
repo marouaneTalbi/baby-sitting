@@ -4,13 +4,15 @@ import bgImage from '../../assets/images/img.webp';
 import {  toast } from 'react-toastify';
 import { Button} from 'flowbite-react';
 import sendRequest from '../../services/aixosRequestFunction';
+import {jwtDecode} from 'jwt-decode';
+import { useUser } from '../../hooks/Auth';
 
 const SignIn = () => {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { setUser } = useUser(); 
 
   const login = async (email, password) => {
     try {
@@ -27,7 +29,10 @@ const SignIn = () => {
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('refresh_token', response.refresh_token);
                 localStorage.setItem('user', JSON.stringify(response));
-                return true;
+                const decoded = jwtDecode(response.token);
+                setUser(decoded); 
+
+                return decoded;
             } else {
                 return false;
             }
@@ -41,11 +46,15 @@ const SignIn = () => {
       e.preventDefault();
       setIsLoading(true);
       try {
-          const success = await login(email, password);
-          if (success) {
-              setIsLoading(false);
-              navigate("/dashboard");
+          const response = await login(email, password);
+          const isParent = response.roles.join() === 'ROLE_PARENT'
+          if (isParent) {
+              navigate("/workers");
+          } else {
+            navigate("/dashboard");
           }
+          setIsLoading(false);
+
       } catch (error) {
           setIsLoading(false);
           toast.error("Username ou mot de passe incorrect");

@@ -7,12 +7,11 @@ const UserForm = ({ user, onClose, onSubmit }) => {
   const [role, setRole] = useState('');
   const [error, setError] = useState(null);
 
-
   useEffect(() => {
     if (user) {
+        console.log(user)
       setFirstname(user.firstname || '');
       setLastname(user.lastname || '');
-      setRole(user.roles.join())
     }
   }, [user]);
 
@@ -25,7 +24,6 @@ const UserForm = ({ user, onClose, onSubmit }) => {
       return;
     }
 
-    console.log(role)
     const endpoint = `/api/users/${user.id}`; 
     const method = 'put';
     const data = {
@@ -74,7 +72,7 @@ const UserForm = ({ user, onClose, onSubmit }) => {
             />
           </div>
 
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-gray-700">Rôle</label>
             <select
               value={role}
@@ -86,7 +84,7 @@ const UserForm = ({ user, onClose, onSubmit }) => {
               <option value="ROLE_PARENT">Parent</option>
               <option value="ROLE_ADMIN">Admin</option>
             </select>
-          </div>
+          </div> */}
 
           <div className="flex justify-end">
             <button

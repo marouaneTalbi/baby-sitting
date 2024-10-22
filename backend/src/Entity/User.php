@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use App\DataPersister\UserDataPersister;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Controller\GetCurrentUserController;
 
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -26,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiFilter(SearchFilter::class, properties: ['role' => 'exact'])] 
+#[ApiFilter(SearchFilter::class, properties: ['role' => 'exact', 'email' => 'exact'])] 
 #[ApiResource(
     operations: [
         new Get(),
@@ -34,21 +33,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             processor: UserDataPersister::class,
             denormalizationContext: ['groups' => ['user:write']]
         ),
-        new Get(
-            uriTemplate: '/me',
-            controller: GetCurrentUserController::class,
-            read: false,
-            openapiContext: [
-                'summary' => 'Récupère l’utilisateur actuellement connecté.',
-            ],
-            normalizationContext: ['groups' => ['user:read']],
-        ),
-        // new Get(
-        //     uriTemplate: '/me',
-        //     security: "is_granted('IS_AUTHENTICATED_FULLY')",
-        //     securityMessage: "Vous devez être connecté pour accéder à vos informations.",
-        //     provider: 'self' 
-        // ),
         new GetCollection(),
         new Put(),
         new Delete(),
@@ -88,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column]
+    #[Groups(['user:read', 'user:write', 'notifications:read'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
@@ -179,7 +164,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        // Retourne un tableau de rôles. ROLE_USER est le rôle par défaut
         return $this->role ? [$this->role] : [];
     }
 

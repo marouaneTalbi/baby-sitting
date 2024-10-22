@@ -25,7 +25,6 @@ const Notifications = ({user}) => {
             const method = 'get';
             try {
                 const response = await sendRequest(endpoint, method, {}, true);
-                console.log(response)
                 return response['hydra:member'];
             } catch (error) {
                 console.error('Failed to get Users:', error); 
@@ -130,7 +129,7 @@ const Notifications = ({user}) => {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center text-gray-600">Aucune notification disponible.</p>
+                    <p className="text-center text-gray-600">Loading ...</p>
                 )}
             </div>
         </main>

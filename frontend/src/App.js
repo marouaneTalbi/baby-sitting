@@ -14,32 +14,44 @@ import Agenda from './pages/Agenda/Agenda';
 import Notifications from './pages/Notifications/notification';
 import useCurrentUser from './hooks/useAuth';
 import Users from './pages/Admin/UsersList';
+import { UserProvider, useUser } from './hooks/Auth';
 
 
 function App() {
-  const user = useCurrentUser();
-
 
   return (
-    <Router> {/* Wrap everything in Router */}
+    <UserProvider>
+        <MainApp /> 
+    </UserProvider>
+  );
+}
+
+function MainApp() {
+  const { loading } = useUser(); 
+  const currentUser = useCurrentUser();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <Router>
       <div className="flex flex-col min-h-screen">
-        <Header user={user} />
+        <Header cUser={currentUser}/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard user={user} />} />
-          <Route path="/profile" element={<Profile user={user}/>} />
+          <Route path="/dashboard" element={<Dashboard user={currentUser} />} />
+          <Route path="/profile" element={<Profile user={currentUser}/>} />
+          <Route path="/agenda" element={<Agenda user={currentUser}/>} />
           <Route path="/workers" element={<Worker />} />
-          <Route path="/agenda" element={<Agenda user={user}/>} />
-          <Route path="/contact" element={<ConatctProfile user={user} />} />
-          <Route path="/notifications" element={<Notifications user={user}/>} />
-          <Route path="/users" element={<Users user={user}/>} />
-
+          <Route path="/contact" element={<ConatctProfile user={currentUser} />} />
+          <Route path="/notifications" element={<Notifications user={currentUser}/>} />
+          <Route path="/users" element={<Users user={currentUser} />} />
         </Routes>
-        <div className="flex-grow">
-        </div>
+        <div className="flex-grow"></div>
         <Footer />
       </div>
     </Router>

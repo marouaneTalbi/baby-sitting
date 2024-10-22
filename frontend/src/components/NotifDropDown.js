@@ -10,12 +10,9 @@ const NotifDropdown = ({ placeholder, user }) => {
   const navigate = useNavigate();
 
   const updateNotifStatus = async (notif) => {
-
-    const role = user.role.join()
+    const role = user && user.role.join()
     let data ;
-
     if(role === 'ROLE_PARENT') {
-
          data = {
             seen: true,
             seenByProvider: notif.seenByProvider,
@@ -46,7 +43,10 @@ const NotifDropdown = ({ placeholder, user }) => {
     if(user){
         getNotifs().then((notifs) => {
             if(notifs) {
-                setOptions(notifs)
+                const newNotifs = user.role.join() === "ROLE_WORKER" ? 
+                    notifs.filter(item => item.seenByProvider === false) :
+                    notifs.filter(item => item.seen === false)
+                setOptions(newNotifs)
             }
         })
     } 
