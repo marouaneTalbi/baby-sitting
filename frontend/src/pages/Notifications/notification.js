@@ -20,7 +20,7 @@ const Notifications = ({user}) => {
 
     const getNotifs = async () => { 
         if (user) {
-            const isParent = role === 'ROLE_PARENT' ? 'parent' : 'serviceProvider'
+            const isParent = user.role.join() === 'ROLE_PARENT' ? 'parent' : 'serviceProvider'
             const endpoint = `/api/notifications?${isParent}=${user.id}`; 
             const method = 'get';
             try {
@@ -75,19 +75,19 @@ const Notifications = ({user}) => {
                                         <p className="text-gray-600">
                                             <span className="font-semibold">Email: </span>{notif.serviceProvider?.email}
                                         </p>
-                                        { notif.serviceProvider.profile && (
+                                        { notif.serviceProvider?.profile && (
                                             <>
                                                 <p className="text-gray-600">
-                                                    <span className="font-semibold">Adresse: </span>{notif.serviceProvider.profile.address}
+                                                    <span className="font-semibold">Adresse: </span>{notif.serviceProvider?.profile.address}
                                                 </p>
                                                 <p className="text-gray-600">
-                                                    <span className="font-semibold">Téléphone: </span>{notif.serviceProvider.profile.phone}
+                                                    <span className="font-semibold">Téléphone: </span>{notif.serviceProvider?.profile.phone}
                                                 </p>
                                                 <p className="text-gray-600">
-                                                    <span className="font-semibold">Taux horaire: </span>{notif.serviceProvider.profile.rate_per_hour} €
+                                                    <span className="font-semibold">Taux horaire: </span>{notif.serviceProvider?.profile.rate_per_hour} €
                                                 </p>
                                                 <p className="text-gray-600">
-                                                    <span className="font-semibold">Description: </span>{notif.serviceProvider.profile.description}
+                                                    <span className="font-semibold">Description: </span>{notif.serviceProvider?.profile.description}
                                                 </p>
                                             </>
                                         )}
@@ -131,6 +131,12 @@ const Notifications = ({user}) => {
                 ) : (
                     <p className="text-center text-gray-600">Loading ...</p>
                 )}
+
+                {
+                    
+                    notifications.length === 0 &&
+                    <p className="text-center text-gray-600">Vous n'avez pas De notifications pour l'instant</p>
+                }
             </div>
         </main>
     );

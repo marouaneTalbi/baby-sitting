@@ -45,9 +45,9 @@ const Header = ({cUser}) => {
               <Link to="/dashboard" className="hover:text-gray-200">Dashboard</Link>
             </>
           )}
-          {/* {!role && (
-            <Link to="/" className="hover:text-gray-200">Home</Link>
-          )} */}
+          {role !== "ROLE_ADMIN" && (
+            <Link to="/notifications" className="hover:text-gray-200">Toutes les notifs</Link>
+          )}
         </nav>
 
         {!role ? (

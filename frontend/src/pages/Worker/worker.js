@@ -45,13 +45,13 @@ const Worker = () => {
             );
         }
         if (service) {
-            const r = updatedProfiles.filter(profile =>
-                profile.userServices[0].service.name === service
+            updatedProfiles = updatedProfiles.filter(profile => {
+                if(profile.userServices.length > 0) {
+                    return profile.userServices[0]?.service.name === service
+                }
+            }
             );
-
-            console.log(r)
         }
-
         setFilteredProfiles(updatedProfiles);
     };
 
@@ -80,6 +80,7 @@ const Worker = () => {
                         className="w-full px-3 py-2 border rounded"
                         required
                         >
+                        <option value="">Choisir</option>
                         <option value="Tutoring">Tutoring</option>
                         <option value="Babysitting">Babysitting</option>
                         <option value="Cleaning">Cleaning</option>

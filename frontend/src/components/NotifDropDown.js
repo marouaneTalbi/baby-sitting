@@ -66,7 +66,9 @@ const NotifDropdown = ({ placeholder, user }) => {
                 :`${notif.parent.firstname} ${notif.parent.lastname} a reserver un de vos creneau ..`
                 return {...notif, message: message}
             })
-            return updatedNotifications.slice(0,19);
+            updatedNotifications.map((item) => console.log(item.parent))
+
+            return updatedNotifications;
         } catch (error) {
             console.error('Failed to get Users:', error); 
         }
