@@ -7,13 +7,16 @@ const Worker = () => {
     const [filteredProfiles, setFilteredProfiles] = useState([]);
     const [priceFilter, setPriceFilter] = useState('');
     const [addressFilter, setAddressFilter] = useState('');
+    const [service, setService] = useState('');
+
 
     const getWorkers = async () => {
         try {
             const endpoint = `/api/users?role=ROLE_WORKER`; 
             const method = 'get';
             const response = await sendRequest(endpoint, method, {}, true);
-            return response['hydra:member'];
+            const allWorkers = response['hydra:member'].filter(item => item.profile !== undefined)
+            return allWorkers;
         } catch (error) {
             console.error('Failed to get Users:', error); 
         }
@@ -41,15 +44,22 @@ const Worker = () => {
                 profile.profile.address.toLowerCase().includes(addressFilter.toLowerCase())
             );
         }
+        if (service) {
+            const r = updatedProfiles.filter(profile =>
+                profile.userServices[0].service.name === service
+            );
+
+            console.log(r)
+        }
 
         setFilteredProfiles(updatedProfiles);
     };
 
     return (
         <main className="min-h-screen flex items-center justify-center bg-gray-100">
-           { filteredProfiles !== undefined ?
+           { filteredProfiles.length > 0 ?
              <div className="flex flex-wrap justify-center p-3">   
-                <div className="flex space-x-3 mb-4 p-3">
+                <div className="flex space-x-3 mb-1 p-1">
                     <input
                         type="number"
                         placeholder="Max Price"
@@ -64,11 +74,21 @@ const Worker = () => {
                         onChange={(e) => setAddressFilter(e.target.value)}
                         className="p-2 border rounded"
                     />
+                    <select
+                        value={service}
+                        onChange={(e) => setService(e.target.value)}
+                        className="w-full px-3 py-2 border rounded"
+                        required
+                        >
+                        <option value="Tutoring">Tutoring</option>
+                        <option value="Babysitting">Babysitting</option>
+                        <option value="Cleaning">Cleaning</option>
+                    </select>
                     <button
                         onClick={handleFilter}
                         className="p-2 bg-blue-500 text-white rounded"
                     >
-                        Apply Filters
+                        Search
                     </button>
                 </div>
                 <div className="flex flex-wrap justify-start p-3">
@@ -76,7 +96,8 @@ const Worker = () => {
                         <CardProfile key={profile.id} profile={profile} />
                     )) : 'Loading ...'}
                 </div>
-            </div> : 'Loding ...'
+            </div> 
+            : 'Loding ...'
            }
         </main>
     );

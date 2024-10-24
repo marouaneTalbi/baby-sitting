@@ -13,12 +13,12 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const { setUser } = useUser(); 
+  const [error, setError] = useState(null);
+
 
   const login = async (email, password) => {
     try {
-        return sendRequest(
-            '/api/login',
-            'post',
+        return sendRequest('/api/login','post',
             {
                 email: email,
                 password: password,
@@ -36,8 +36,12 @@ const SignIn = () => {
             } else {
                 return false;
             }
+        }).catch(() =>{
+          setError("Email ou mot de passe invalide")
+          console.error('===>',error)
         })
     } catch (error) {
+        setError("Email ou mot de passe invalide")
         console.log('===>',error)
     }
 };
@@ -68,7 +72,12 @@ const SignIn = () => {
       <div className="w-1/2 flex items-center justify-center p-8 bg-gray-100">
         <div className="w-full max-w-md">
           <h2 className="text-4xl font-bold mb-8 text-center">Sign In</h2>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+              <strong className="font-bold">{error}</strong>
+            </div>
+          )}
+          <form className="space-y-6 mt-3" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
               <input

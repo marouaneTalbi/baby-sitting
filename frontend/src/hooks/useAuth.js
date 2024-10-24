@@ -10,7 +10,7 @@ const useCurrentUser = () => {
   const getUserProfile = async () => {
     if(user){
         try {
-            return sendRequest(  `/api/users?email=${user.username}`, 'get',false)
+            return sendRequest(`/api/users?email=${user.username}`, 'get',false)
             .then((response) => {
                 const userData = {...response['hydra:member'][0], role: user.roles}
                 return userData

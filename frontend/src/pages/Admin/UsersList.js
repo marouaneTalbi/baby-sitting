@@ -69,10 +69,8 @@ const Users = ({user}) => {
 
   const showUserRole = (role) => {
     console.log(role)
-
     // if(role){
     //   const currentRole = role.join()
-
     //   if(currentRole == 'ROLE_WORKER') {
     //     return 'Worker'
     //   } else if (role == 'ROLE_PARENT') {
@@ -81,7 +79,6 @@ const Users = ({user}) => {
     //     return 'Admin'
     //   }
     // }
-
   }
 
   if (loading) {

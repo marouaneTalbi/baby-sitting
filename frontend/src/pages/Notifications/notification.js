@@ -55,8 +55,8 @@ const Notifications = ({user}) => {
                                 {
                                     role === 'ROLE_PARENT' ? 
 
-                                    `Vous avez toutes les information de ${notif.serviceProvider.lastname}, contactez le pour des que vous pouvez.` :
-                                    `${notif.serviceProvider.lastname} a reserver un de vos creneau il vous contacteras dans les prochaines heures` 
+                                    `Vous avez toutes les information de ${notif.serviceProvider?.lastname}, contactez le pour des que vous pouvez.` :
+                                    `${notif.serviceProvider?.lastname} a reserver un de vos creneau il vous contacteras dans les prochaines heures` 
 
                                 }
                             </p>
@@ -67,13 +67,13 @@ const Notifications = ({user}) => {
                                         <div>
                                         <h3 className="text-lg font-medium text-gray-700">Service Provider:</h3>
                                         <p className="text-gray-600">
-                                            <span className="font-semibold">Nom: </span>{notif.serviceProvider.lastname}
+                                            <span className="font-semibold">Nom: </span>{notif.serviceProvider?.lastname}
                                         </p>
                                         <p className="text-gray-600">
-                                            <span className="font-semibold">Prénom: </span>{notif.serviceProvider.firstname}
+                                            <span className="font-semibold">Prénom: </span>{notif.serviceProvider?.firstname}
                                         </p>
                                         <p className="text-gray-600">
-                                            <span className="font-semibold">Email: </span>{notif.serviceProvider.email}
+                                            <span className="font-semibold">Email: </span>{notif.serviceProvider?.email}
                                         </p>
                                         { notif.serviceProvider.profile && (
                                             <>

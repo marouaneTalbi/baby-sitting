@@ -14,6 +14,8 @@ const Signup = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
 
 
@@ -49,17 +51,25 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    try {
-        const success = await register(firstname, lastname, email, password);
-        if (success) {
-            setIsLoading(false);
-            navigate("/signin");
-        }
-    } catch (error) {
-        setIsLoading(false);
-        toast.error("Username ou mot de passe incorrect");
-    }
 
+    if(password.length < 5) {
+      setError("Le mot de passe doit contenir au moins 5 caractaires")
+      setIsLoading(false);
+    }else if(firstname.length  < 2 || lastname.length < 2) {
+      setError("Le nom et le prenom doivent contenir au moins 2 caractaires")
+      setIsLoading(false);
+    } else {
+      try {
+          const success = await register(firstname, lastname, email, password);
+          if (success) {
+              setIsLoading(false);
+              navigate("/signin");
+          }
+      } catch (error) {
+          setIsLoading(false);
+          toast.error("Username ou mot de passe incorrect");
+      }
+    }
   }
 
 
@@ -72,7 +82,12 @@ const Signup = () => {
       <div className="w-1/2 flex items-center justify-center p-8 bg-gray-100">
         <div className="w-full max-w-md">
           <h2 className="text-4xl font-bold mb-8 text-center">Sign Up</h2>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+              <strong className="font-bold">{error}</strong>
+            </div>
+          )}
+          <form className="space-y-6 mt-4" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">First Name</label>
               <input

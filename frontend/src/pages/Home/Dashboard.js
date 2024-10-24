@@ -131,27 +131,26 @@ const Dashboard = () => {
 
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Graphique des inscriptions des utilisateurs */}
-            {
-            user && user.role.join() === 'ROLE_ADMIN' && (
-                <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h2 className="text-2xl font-semibold mb-4">Inscriptions Utilisateurs ce Mois-ci</h2>
-                <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={userStats}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" label={{ value: 'Jour', position: 'insideBottomRight', offset: -5 }} />
-                    <YAxis label={{ value: 'Inscriptions', angle: -90, position: 'insideLeft' }} />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="registrations" stroke="#8884d8" activeDot={{ r: 8 }} />
-                </LineChart>
-                </ResponsiveContainer>
-            </div> 
-            )
+        { 
+          user && user.role.join() === 'ROLE_ADMIN' && (
+              <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h2 className="text-2xl font-semibold mb-4">Inscriptions Utilisateurs ce Mois-ci</h2>
+              <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={userStats}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" label={{ value: 'Jour', position: 'insideBottomRight', offset: -5 }} />
+                  <YAxis label={{ value: 'Inscriptions', angle: -90, position: 'insideLeft' }} />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="registrations" stroke="#8884d8" activeDot={{ r: 8 }} />
+              </LineChart>
+              </ResponsiveContainer>
+          </div>) 
+            
         }
-
-        {/* Graphique des réservations */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        {
+          bookingStats.length > 0 ?
+          <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold mb-4">Réservations ce Mois-ci</h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={bookingStats}>
@@ -164,9 +163,12 @@ const Dashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+        : 'Loading...'
+        }
+
+
       </div>
 
-      {/* Section supplémentaire pour d'autres statistiques ou graphiques */}
     </main>
   );
 };

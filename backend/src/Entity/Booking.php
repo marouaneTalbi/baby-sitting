@@ -22,6 +22,7 @@ class Booking
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     #[Groups(['booking:read', 'booking:write'])]
+    #[ORM\JoinColumn(name: "parent_id_id", referencedColumnName: "id", onDelete: "CASCADE")]
     private ?User $parent_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]

@@ -62,11 +62,11 @@ const NotifDropdown = ({ placeholder, user }) => {
             const response = await sendRequest(endpoint, method, {}, true);
             const updatedNotifications = response['hydra:member'].map((notif) => {
                 const message = role === 'ROLE_PARENT' ? 
-                `Vous avez reserver un creneau de ${notif.serviceProvider.firstname} ${notif.serviceProvider.lastname}`
+                `Vous avez reserver un creneau de ${notif.serviceProvider?.firstname} ${notif.serviceProvider?.lastname}`
                 :`${notif.parent.firstname} ${notif.parent.lastname} a reserver un de vos creneau ..`
                 return {...notif, message: message}
             })
-            return updatedNotifications;
+            return updatedNotifications.slice(0,19);
         } catch (error) {
             console.error('Failed to get Users:', error); 
         }

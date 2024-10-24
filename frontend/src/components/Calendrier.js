@@ -7,7 +7,7 @@ const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sat
 const WeeklyCalendar = ({
     showAlert, startTime, endTime, role, closeAlert, addAvailability,
     handlevailablity, handleStartTimeChange, handleEndTimeChange, isModalOpen,
-    handleSubmit, handleReservation, user, availabilities, handleCloseModal
+    handleSubmit, handleReservation, user, availabilities, handleCloseModal, deleteAvailability
 }) => {
 
   return (
@@ -24,48 +24,62 @@ const WeeklyCalendar = ({
         {
             user && role === 'ROLE_WORKER' &&
             <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Ajouter un creneau">
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startTime">
-                            Heure de début
-                        </label>
-                        <input
-                            type="time"
-                            id="startTime"
-                            name="startTime"
-                            value={startTime}
-                            onChange={handleStartTimeChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            min="8"
-                            max="23:00"
-                            required
-                        />
+                <div>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startTime">
+                                Heure de début
+                            </label>
+                            <input
+                                type="time"
+                                id="startTime"
+                                name="startTime"
+                                value={startTime}
+                                onChange={handleStartTimeChange}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                min="8"
+                                max="23:00"
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="endTime">
+                                Heure de fin
+                            </label>
+                            <input
+                                type="time"
+                                id="endTime"
+                                name="endTime"
+                                value={endTime}
+                                onChange={handleEndTimeChange}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                min="08:00"
+                                max="23:00"
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="bg-blue-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            Valider
+                        </button>
+
+                    </form>
+                    <div className='bg-red-100 mt-3 flex-1'>
+                        <button
+                            onClick={deleteAvailability}
+                            className="bg-red-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            Supprimer
+                        </button>
                     </div>
 
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="endTime">
-                            Heure de fin
-                        </label>
-                        <input
-                            type="time"
-                            id="endTime"
-                            name="endTime"
-                            value={endTime}
-                            onChange={handleEndTimeChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            min="08:00"
-                            max="23:00"
-                            required
-                        />
-                    </div>
 
-                    <button
-                        type="submit"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    >
-                        Ajouter
-                    </button>
-                </form>
+                </div>
+       
             </Modal>
         }
 

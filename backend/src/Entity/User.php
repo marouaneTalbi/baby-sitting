@@ -68,7 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $role = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:write'])]
+    #[Groups(['user:write', 'user:read'])]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -82,14 +82,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, UserService>
      */
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: UserService::class)]
+    #[ORM\OneToMany(mappedBy: 'user_id',cascade: ['persist', 'remove'],targetEntity: UserService::class)]
     #[Groups(['user:read'])]
     private Collection $userServices;
 
     /**
      * @var Collection<int, Booking>
      */
-    #[ORM\OneToMany(mappedBy: 'parent_id', targetEntity: Booking::class)]
+    #[ORM\OneToMany(mappedBy: 'parent_id', cascade: ['remove'], orphanRemoval: true, targetEntity: Booking::class)]
     private Collection $bookings;
 
     /**
