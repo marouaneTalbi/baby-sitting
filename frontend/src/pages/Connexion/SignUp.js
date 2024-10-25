@@ -72,13 +72,9 @@ const Signup = () => {
     }
   }
 
-
-
   return (
     <div className="min-h-screen flex">
-      <div className="w-1/2 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
-</div>
-
+      <div className="w-1/2 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}></div>
       <div className="w-1/2 flex items-center justify-center p-8 bg-gray-100">
         <div className="w-full max-w-md">
           <h2 className="text-4xl font-bold mb-8 text-center">Sign Up</h2>

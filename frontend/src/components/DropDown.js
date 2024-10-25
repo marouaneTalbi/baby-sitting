@@ -12,7 +12,6 @@ const Dropdown = ({ placeholder }) => {
   const handleOptionClick = (option) => {
     setSelected(option);
     setIsOpen(false);
-
     if(option === 'Profile') {
         navigate("/profile");
     } else if(option =='Deconnexion') {
@@ -21,6 +20,7 @@ const Dropdown = ({ placeholder }) => {
         localStorage.removeItem('user');
         window.location.reload();
     }
+    toggleDropdown()
   };
 
   const map = ['Profile', 'Deconnexion',];
@@ -44,7 +44,7 @@ const Dropdown = ({ placeholder }) => {
           {options.map((option, index) => (
             <div
               key={index}
-              className="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white transition duration-200"
+              className="px-4 py-2 cursor-pointer hover:bg-green-400 hover:text-gray-500 rounded-lg transition duration-200"
               onClick={() => handleOptionClick(option)}
             >
               {option}

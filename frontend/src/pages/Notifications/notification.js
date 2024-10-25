@@ -20,6 +20,7 @@ const Notifications = ({user}) => {
 
     const getNotifs = async () => { 
         if (user) {
+            console.log(user)
             const isParent = user.role.join() === 'ROLE_PARENT' ? 'parent' : 'serviceProvider'
             const endpoint = `/api/notifications?${isParent}=${user.id}`; 
             const method = 'get';

@@ -90,7 +90,7 @@ const Users = ({user}) => {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
+    <main className="min-h-screen bg-gray-200 p-20">
       {/* <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold text-gray-800">Utilisateurs</h1>
         <button
@@ -101,9 +101,9 @@ const Users = ({user}) => {
         </button>
       </div> */}
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto ">
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-gray-800 text-white">
+          <thead className="bg-green-600 text-white">
             <tr>
               <th className="py-3 px-6 text-left">Prénom</th>
               <th className="py-3 px-6 text-left">Nom</th>

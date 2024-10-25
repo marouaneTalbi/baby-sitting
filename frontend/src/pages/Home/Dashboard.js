@@ -125,11 +125,8 @@ const Dashboard = () => {
   return (
     <main className="min-h-screen bg-gray-100 p-8">
       <div className="text-center mb-8">
-        <h1 className="text-5xl font-bold text-gray-800">Dashboard</h1>
+        <h1 className="text-5xl font-bold text-gray-800">Statistics Dashboard</h1>
       </div>
-
-
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         { 
           user && user.role.join() === 'ROLE_ADMIN' && (
@@ -148,6 +145,7 @@ const Dashboard = () => {
           </div>) 
             
         }
+
         {
           bookingStats.length > 0 ?
           <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -159,13 +157,21 @@ const Dashboard = () => {
               <YAxis label={{ value: 'Réservations', angle: -90, position: 'insideLeft' }} />
               <Tooltip />
               <Legend />
-              <Bar dataKey="bookings" fill="#82ca9d" />
+              <Bar dataKey="bookings" fill="#16a34a" />
             </BarChart>
           </ResponsiveContainer>
         </div>
         : 'Loading...'
         }
 
+  
+
+
+      </div>
+      <div>
+        {
+          bookingStats.length === 0 && <h1 className="text-xl">Vous n'avez pas de statistiques</h1>
+        }
 
       </div>
 

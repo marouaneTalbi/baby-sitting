@@ -33,6 +33,7 @@ const NotifDropdown = ({ placeholder, user }) => {
         const method = 'put';
         const response = await sendRequest(endpoint, method, data, true);
         navigate("/notifications");
+        toggleDropdown()
         return response;
     } catch (error) {
         console.error('Failed to get Users:', error); 
@@ -55,7 +56,7 @@ const NotifDropdown = ({ placeholder, user }) => {
   const getNotifs = async () => { 
     if(user) {
         const role  = user.role.join();
-        const isParent = role === 'ROLE_PARENT' ? 'parent' : 'service_provider'
+        const isParent = role === 'ROLE_PARENT' ? 'parent' : 'serviceProvider'
         try {
             const endpoint = `/api/notifications?${isParent}=${user.id}`; 
             const method = 'get';
@@ -91,7 +92,7 @@ const NotifDropdown = ({ placeholder, user }) => {
                     options.map((option, index) => (
                         <div
                             key={index}
-                            className="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white transition duration-200"
+                            className="px-4 py-2 cursor-pointer hover:bg-green-500 rounded-lg hover:text-white transition duration-200"
                             onClick={() => updateNotifStatus(option)}
                         >
                             {(user.role.join() === "ROLE_PARENT") && !option.seen && option.message}
@@ -101,7 +102,7 @@ const NotifDropdown = ({ placeholder, user }) => {
                         </div>
                     ))
                 ) : (
-                    <div className="px-4 py-2 cursor-pointer text-white bg-red-500">
+                    <div className="px-4 py-2 cursor-pointer rounded-lg text-white bg-red-500 rounded-lg">
                         Aucune notification disponible.
                     </div>
                 )}

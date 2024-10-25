@@ -17,7 +17,6 @@ const Profile = ({user}) => {
 
   useEffect(() => {
     if(user) {
-      console.log(user)
         setRole(user.role.join())
         if(user.profile){
             setPhone(user.profile.phone || 0)
@@ -158,7 +157,7 @@ const Profile = ({user}) => {
           <div className="mt-6 flex justify-end">
             <button
               onClick={handleOpenModal}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+              className="px-4 py-2 bg-green-600 text-white rounded-lg"
             >
               Edit Profile
             </button>
@@ -237,7 +236,7 @@ const Profile = ({user}) => {
             >
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+            <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded-lg">
               Save
             </button>
           </div>

@@ -22,7 +22,7 @@ const Header = ({cUser}) => {
   }, [user, location.pathname]);
 
   return (
-    <header className="bg-blue-600 text-white shadow-md">
+    <header className="bg-green-600 text-white shadow-md">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <div className="text-xl font-bold">
           <Link to="/">BaBy-Sit</Link>
@@ -30,37 +30,37 @@ const Header = ({cUser}) => {
         <nav className="flex space-x-4">
           {role === "ROLE_ADMIN" && (
             <>          
-              <Link to="/users" className="hover:text-gray-200">Users</Link>
-              <Link to="/dashboard" className="hover:text-gray-200">Dashboard</Link>
+              <Link to="/users" className="hover:text-gray-200 font-bold">Users</Link>
+              <Link to="/dashboard" className="hover:text-gray-200 font-bold">Dashboard</Link>
             </>
           )}
           {role === "ROLE_PARENT" && (
             <>
-              <Link to="/workers" className="hover:text-gray-200">Baby Sitters</Link>
+              <Link to="/workers" className="hover:text-gray-200 font-bold">Baby Sitters</Link>
             </>
           )}
           {role === "ROLE_WORKER" && (
             <>
-              <Link to="/agenda" className="hover:text-gray-200">Agenda</Link>
-              <Link to="/dashboard" className="hover:text-gray-200">Dashboard</Link>
+              <Link to="/agenda" className="hover:text-gray-200 font-bold">Agenda</Link>
+              <Link to="/dashboard" className="hover:text-gray-200 font-bold">Dashboard</Link>
             </>
           )}
-          {role !== "ROLE_ADMIN" && (
-            <Link to="/notifications" className="hover:text-gray-200">Toutes les notifs</Link>
+          {cUser && role !== "ROLE_ADMIN" && (
+            <Link to="/notifications" className="hover:text-gray-200 font-bold">Toutes les notifs</Link>
           )}
         </nav>
 
         {!role ? (
           <div className="space-x-4">
-            <Link to="/signin" className="px-4 py-2 bg-white text-blue-600 font-semibold rounded-md hover:bg-gray-100">
+            <Link to="/signin" className="px-4 py-2 bg-white text-green-600  font-semibold rounded-md hover:bg-gray-100 font-bold">
               Sign In
             </Link>
-            <Link to="/signup" className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-700">
+            <Link to="/signup" className="px-4 py-2 bg-blue-500 text-white border font-semibold rounded-md hover:bg-blue-700 font-bold">
               Sign Up
             </Link>
           </div>
         ) : (
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 font-bold">
             {cUser && role !== "ROLE_ADMIN" && <NotifDropdown placeholder="Notifications" user={cUser} />}
             <Dropdown placeholder="Profile" />
           </div>

@@ -22,7 +22,7 @@ use ApiPlatform\Metadata\Delete;
 )]
 #[ApiFilter(SearchFilter::class, properties: [
     'parent' => 'exact',
-    'service_provider' => 'exact'
+    'serviceProvider' => 'exact'
 ])]
 class Notification
 {

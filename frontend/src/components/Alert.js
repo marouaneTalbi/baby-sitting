@@ -12,7 +12,7 @@ const Alert = ({ message, primaryButtonText, secondaryButtonText, onPrimaryButto
         <div className="mt-4 flex space-x-4">
           <button
             onClick={onPrimaryButtonClick}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-green-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             {primaryButtonText}
           </button>
