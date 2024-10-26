@@ -23,7 +23,7 @@ const Users = ({user}) => {
       } catch (error) {
           console.error('Failed to get Users:', error); 
       }
-};
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -79,7 +79,7 @@ const Users = ({user}) => {
     //     return 'Admin'
     //   }
     // }
-  }
+  };
 
   if (loading) {
     return <div className="text-center text-gray-500">Chargement...</div>;

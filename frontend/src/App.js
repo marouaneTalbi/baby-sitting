@@ -16,7 +16,6 @@ import useCurrentUser from './hooks/useAuth';
 import Users from './pages/Admin/UsersList';
 import { UserProvider, useUser } from './hooks/Auth';
 
-
 function App() {
 
   return (
